@@ -1,0 +1,9 @@
+RewriteEngine on
+RewriteCond %{REQUEST_URI} ^/front.*
+RewriteRule (.*) $1 [L]
+
+RewriteCond %{REQUEST_URI} ^/admin.*
+RewriteRule (.*) $1 [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule . index.php [L]

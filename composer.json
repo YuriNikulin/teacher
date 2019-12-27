@@ -1,0 +1,16 @@
+{
+    "name": "lucky/teacher",
+    "type": "project",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Yuriy Nikulin",
+            "email": "kowkogab@gmail.com"
+        }
+    ],
+    "require": {
+        "altorouter/altorouter": "dev-master",
+        "doctrine/orm": "2.6.2",
+        "rbdwllr/reallysimplejwt": "dev-master"
+    }
+}

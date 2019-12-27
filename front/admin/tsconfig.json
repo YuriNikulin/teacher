@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "lib": ["ES6", "DOM"],
+    "module": "ESNext",
+    "strict": true,
+    "target": "es5",
+    "jsx": "react",
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "baseUrl": "./",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "typeRoots": ["node_modules/@types", "src/custom_typings"],
+    "paths": {
+      "@*": ["src/*"]
+    }
+  },
+  "include": [
+    "src"
+  ]
+}
