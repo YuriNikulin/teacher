@@ -15,17 +15,18 @@ import Form from '@components/Form/Form';
 interface IProps {
   isLoading: boolean;
   error?: Error;
+  submitText?: string;
 }
 
 const PagesForm: React.FunctionComponent<InjectedFormProps & IProps> = props => {
-  const { isLoading, error, handleSubmit } = props;
+  const { isLoading, error, handleSubmit, submitText } = props;
 
   return (
     <Form
       onSubmit={handleSubmit}
       submit={
         <Button type="submit" variant="contained" color="primary" isLoading={isLoading} spinnerColor="green">
-          Войти
+          {submitText || 'Отправить'}
         </Button>
       }
     >

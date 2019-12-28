@@ -29,7 +29,7 @@ class Page
     protected $layout;
 
     /** 
-     * @ORM\OneToMany(targetEntity="Block", mappedBy="parent")
+     * @ORM\OneToMany(targetEntity="Block", mappedBy="parent", cascade={"remove"})
      */
     protected $blocks;
 

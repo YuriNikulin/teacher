@@ -51,6 +51,26 @@ function reducer(state: IPageReducer = initialState, action: ActionsTypes) {
         error: action.payload,
       };
 
+    case ACTIONS.DELETE_PAGE_REQUEST:
+      return {
+        ...state,
+        isLoading: true,
+      };
+
+    case ACTIONS.DELETE_PAGE_SUCCESS:
+      // const removedIndex =
+      return {
+        ...state,
+        isLoading: false,
+        pages: [...state.pages.filter(page => page.id !== action.payload)],
+      };
+
+    case ACTIONS.DELETE_PAGE_FAILURE:
+      return {
+        ...state,
+        isLoading: false,
+      };
+
     default:
       return state;
   }

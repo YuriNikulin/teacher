@@ -41,7 +41,6 @@
         "method" => "GET",
         "path" => "[*]$api_version_base/page_list",
         "controller" => function($body, $params, $user) {
-          // print_r($user);
           $this->handleGetPagesList($user);
         }
       ));
@@ -51,6 +50,14 @@
         "path" => "@$api_version_base/page_layout",
         "controller" => function($body, $params, $user) {
           $this->handlePageLayoutChange($body, $user);
+        }
+      ));
+
+      self::$router::addRoute(array(
+        "method" => "DELETE",
+        "path" => "[*]$api_version_base/page/[i:id]",
+        "controller" => function($body, $params, $user) {
+          $this->handleDeletePage($params, $user);
         }
       ));
     }
@@ -209,7 +216,6 @@
 
     private function handleGetPagesList($user)
     {
-      // print_r($user);
       if (!$user) {
         CustomResponse::ajaxError(403, 'Необходимо войти в учётную запись');
         return;
@@ -230,6 +236,32 @@
         )));
       }
       CustomResponse::ajaxResponse($_pages);
+    }
+
+    private function handleDeletePage($params, $user)
+    {
+      if (!$user) {
+        CustomResponse::ajaxError(403, 'Необходимо войти в учётную запись');
+        return;
+      }
+
+      if (!isset($params['id'])) {
+        CustomResponse::ajaxError(400, 'Необходимо указать id страницы');
+        return;
+      }
+
+      $page = CustomEntityManager::$entityManager->find('Page', $params['id']);
+      if (!$page) {
+        CustomResponse::ajaxError(400, 'Страница не найдена');
+        return;
+      }
+
+      $id = $page->getId();
+
+      CustomEntityManager::$entityManager->remove($page);
+      CustomEntityManager::$entityManager->flush();
+      CustomResponse::ajaxResponse($id);
+      return;
     }
   }
 

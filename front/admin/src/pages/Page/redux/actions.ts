@@ -11,6 +11,12 @@ import {
   CREATE_PAGE_FAILURE_TYPE,
   CREATE_PAGE_SUCCESS,
   CREATE_PAGE_SUCCESS_TYPE,
+  DELETE_PAGE_FAILURE,
+  DELETE_PAGE_FAILURE_TYPE,
+  DELETE_PAGE_REQUEST,
+  DELETE_PAGE_REQUEST_TYPE,
+  DELETE_PAGE_SUCCESS,
+  DELETE_PAGE_SUCCESS_TYPE,
 } from './constants';
 import { IPage } from '../types';
 
@@ -84,10 +90,47 @@ export function createPageFailure(payload: CreatePageFailureAction['payload']) {
   };
 }
 
+export interface DeletePageRequestAction {
+  type: DELETE_PAGE_REQUEST_TYPE;
+  payload: IPage['id'];
+}
+
+export function deletePageRequest(payload: DeletePageRequestAction['payload']) {
+  return {
+    type: DELETE_PAGE_REQUEST,
+    payload: payload,
+  };
+}
+
+export interface DeletePageSuccessAction {
+  type: DELETE_PAGE_SUCCESS_TYPE;
+  payload: IPage['id'];
+}
+
+export function deletePageSuccess(payload: DeletePageSuccessAction['payload']) {
+  return {
+    type: DELETE_PAGE_SUCCESS,
+    payload: payload,
+  };
+}
+
+export interface DeletePageFailureAction {
+  type: DELETE_PAGE_FAILURE_TYPE;
+}
+
+export function deletePageFailure() {
+  return {
+    type: DELETE_PAGE_FAILURE,
+  };
+}
+
 export type ActionsTypes =
   | GetPagesListRequstAction
   | GetPagesListFailureAction
   | GetPagesListSuccessAction
   | CreatePageRequestAction
   | CreatePageSuccessAction
-  | CreatePageFailureAction;
+  | CreatePageFailureAction
+  | DeletePageRequestAction
+  | DeletePageSuccessAction
+  | DeletePageFailureAction;

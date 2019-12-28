@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getPagesListRequest, createPageRequest } from '../redux/actions';
+import { getPagesListRequest, createPageRequest, deletePageRequest } from '../redux/actions';
 import { IStore } from '@store/reducer';
 import { pagesSelector, isLoadingSelector, isFormLoadingSelector, errorSelector } from '../redux/selectors';
 import { IPage } from '../types';
@@ -11,10 +11,13 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import Dialog from '@components/Dialog/Dialog';
 import PagesForm from '@pages/Page/components/PagesForm';
 import { IPageReducer } from '../types';
+import Confirmation from '@components/Confirmation/Confirmation';
+import { Typography } from '@material-ui/core';
 
 interface Props {
   getPagesListRequest: Function;
   createPageRequest: Function;
+  deletePageRequest: Function;
   pages: IPageReducer['pages'];
   isLoading: IPageReducer['isLoading'];
   showCreateModal?: boolean;
@@ -33,6 +36,7 @@ function PagesList(props: Props) {
     createPageRequest,
     isFormLoading,
     error,
+    deletePageRequest,
   } = props;
   React.useEffect(() => {
     getPagesListRequest();
@@ -50,6 +54,31 @@ function PagesList(props: Props) {
     createPageRequest(values);
   };
 
+  const handleDelete = (page: IPage) => {
+    Confirmation.getConfirmation({
+      message: (
+        <Typography>
+          Вы действительно хотите удалить страницу{' '}
+          <Typography color="primary" component="span">
+            {`${page.name}`}&nbsp;
+          </Typography>
+          (
+          <Typography component="span" variant="body2" color="textSecondary">
+            {page.url}
+          </Typography>
+          ) ?
+        </Typography>
+      ),
+      title: 'Удаление страницы',
+      acceptText: 'Удалить',
+      rejectText: 'Не удалять',
+    })
+      .then(() => {
+        deletePageRequest(page.id);
+      })
+      .catch(() => {});
+  };
+
   if (isLoading) {
     return <Preloader position="absolute" />;
   }
@@ -63,14 +92,18 @@ function PagesList(props: Props) {
             description: page.url,
             buttons: [
               { component: <SettingsRoundedIcon fontSize="small" />, description: 'Редактировать' },
-              { component: <DeleteIcon color="error" fontSize="small" />, description: 'Удалить' },
+              {
+                component: <DeleteIcon color="error" fontSize="small" />,
+                description: 'Удалить',
+                onClick: () => handleDelete(page),
+              },
             ],
           };
         })}
       />
       {showCreateModal && (
         <Dialog title="Создать страницу" open maxWidth="sm" fullWidth showCloseIcon onClose={onCreateModalClose}>
-          <PagesForm onSubmit={handleCreate} />
+          <PagesForm onSubmit={handleCreate} submitText="Создать" />
         </Dialog>
       )}
     </React.Fragment>
@@ -89,6 +122,7 @@ const mapStateToProps = (store: IStore) => {
 const mapDispatchToProps = {
   getPagesListRequest,
   createPageRequest,
+  deletePageRequest,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PagesList);

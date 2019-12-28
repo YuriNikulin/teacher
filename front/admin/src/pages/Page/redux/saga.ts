@@ -2,13 +2,16 @@ import { takeLatest, getContext, call, put } from 'redux-saga/effects';
 import { IApiClient, IResponse, IRequestConfig } from '@helpers/api';
 import { Error, IPage } from '../types';
 
-import { GET_PAGES_LIST_REQUEST, CREATE_PAGE_REQUEST } from './constants';
+import { GET_PAGES_LIST_REQUEST, CREATE_PAGE_REQUEST, DELETE_PAGE_REQUEST } from './constants';
 import {
   getPagesListFailure,
   getPagesListSuccess,
   createPageSuccess,
   CreatePageRequestAction,
   createPageFailure,
+  DeletePageRequestAction,
+  deletePageSuccess,
+  deletePageFailure,
 } from './actions';
 
 const getPagesListApiUrl = 'page_list';
@@ -48,7 +51,23 @@ export function* handleCreatePageRequest({ payload }: CreatePageRequestAction) {
   yield put(createPageSuccess(res.data as IPage));
 }
 
+export function* handleDeletePageRequest({ payload }: DeletePageRequestAction) {
+  const api: IApiClient = yield getContext('api');
+  let res: IResponse<Error | IPage['id']>;
+  res = yield call(api.makeRequest, {
+    url: `${onePageActionApiUrl}/${payload}`,
+    method: 'DELETE',
+  });
+
+  if (!res.success) {
+    yield put(deletePageFailure());
+  }
+
+  yield put(deletePageSuccess(res.data as IPage['id']));
+}
+
 export default function* pagesSaga() {
   yield takeLatest(GET_PAGES_LIST_REQUEST, handleGetPagesListRequest);
   yield takeLatest(CREATE_PAGE_REQUEST, handleCreatePageRequest);
+  yield takeLatest(DELETE_PAGE_REQUEST, handleDeletePageRequest);
 }

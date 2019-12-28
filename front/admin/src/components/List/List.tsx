@@ -12,6 +12,7 @@ import Tooltip from '@components/Tooltip/Tooltip';
 interface Button {
   component: React.ReactElement;
   description?: string;
+  onClick?: () => any;
 }
 
 interface Item {
@@ -44,7 +45,7 @@ function _List(props: Props) {
                 <ListItemSecondaryAction key={index}>
                   {buttons.map((item: Button, index) => {
                     const _button = (
-                      <IconButton size="small" key={index}>
+                      <IconButton size="small" key={index} onClick={item.onClick ? item.onClick : undefined}>
                         {item.component}
                       </IconButton>
                     );
