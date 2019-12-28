@@ -10,7 +10,7 @@ import Tooltip from '@components/Tooltip/Tooltip';
 interface IProps {}
 
 const Dashboard: React.FunctionComponent<IProps> = props => {
-  const [showModal, setShowModal] = React.useState<boolean>(true);
+  const [showModal, setShowModal] = React.useState<boolean>(false);
 
   const openModal = () => {
     setShowModal(true);
@@ -26,6 +26,7 @@ const Dashboard: React.FunctionComponent<IProps> = props => {
         header={<Header />}
         sidemenu={
           <SideMenu
+            title="Список страниц"
             footer={
               <Tooltip message="Создать страницу" anchorOrigin={{ vertical: 'center', horizontal: 'right' }}>
                 <Fab color="primary" size="small" onClick={openModal}>
@@ -37,7 +38,6 @@ const Dashboard: React.FunctionComponent<IProps> = props => {
             <PagesList showCreateModal={showModal} onCreateModalClose={closeModal} />
           </SideMenu>
         }
-        content={<div>CONTENT</div>}
       />
     </React.Fragment>
   );

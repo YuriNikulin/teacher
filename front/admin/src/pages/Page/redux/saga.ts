@@ -1,13 +1,18 @@
 import { takeLatest, getContext, call, put } from 'redux-saga/effects';
-// import { LOGIN_REQUEST } from './constants';
-// import { LoginRequstAction, loginFailure, loginSuccess } from './actions';
 import { IApiClient, IResponse, IRequestConfig } from '@helpers/api';
 import { Error, IPage } from '../types';
 
-import { GET_PAGES_LIST_REQUEST } from './constants';
-import { getPagesListFailure, getPagesListSuccess } from './actions';
+import { GET_PAGES_LIST_REQUEST, CREATE_PAGE_REQUEST } from './constants';
+import {
+  getPagesListFailure,
+  getPagesListSuccess,
+  createPageSuccess,
+  CreatePageRequestAction,
+  createPageFailure,
+} from './actions';
 
 const getPagesListApiUrl = 'page_list';
+const onePageActionApiUrl = 'page';
 
 export function* handleGetPagesListRequest() {
   const api: IApiClient = yield getContext('api');
@@ -25,6 +30,25 @@ export function* handleGetPagesListRequest() {
   yield put(getPagesListSuccess(res.data as Array<IPage>));
 }
 
+export function* handleCreatePageRequest({ payload }: CreatePageRequestAction) {
+  const api: IApiClient = yield getContext('api');
+  let res: IResponse<Error | IPage>;
+
+  res = yield call(api.makeRequest, {
+    url: onePageActionApiUrl,
+    method: 'PUT',
+    body: payload,
+  } as IRequestConfig);
+
+  if (!res.success) {
+    yield put(createPageFailure(res.data));
+    return;
+  }
+
+  yield put(createPageSuccess(res.data as IPage));
+}
+
 export default function* pagesSaga() {
   yield takeLatest(GET_PAGES_LIST_REQUEST, handleGetPagesListRequest);
+  yield takeLatest(CREATE_PAGE_REQUEST, handleCreatePageRequest);
 }

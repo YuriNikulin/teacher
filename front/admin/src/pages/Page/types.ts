@@ -11,6 +11,7 @@ export type Error = Partial<IPage> | string;
 
 export interface IPageReducer {
   isLoading: boolean;
+  isFormLoading: boolean;
   error?: Error;
   pages: Array<IPage>;
 }

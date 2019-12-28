@@ -63,12 +63,21 @@
       }
 
       if (!isset($body['name'])) {
-        CustomResponse::ajaxError(400, 'Необходимо указать название страницы');
+        CustomResponse::ajaxError(400, array('name' => 'Необходимо указать название страницы'));
         return;
       }
 
       if (!isset($body['url'])) {
-        CustomResponse::ajaxError(400, 'Необходимо указать url страницы');
+        CustomResponse::ajaxError(400, array('url' => 'Необходимо указать url страницы'));
+        return;
+      }
+
+      $oldPage = CustomEntityManager::$entityManager
+        ->getRepository('Page')
+        ->findBy(['url' => $body['url']]);
+
+      if ($oldPage) {
+        CustomResponse::ajaxError(400, array('url' => 'Страница с таким url уже существует'));
         return;
       }
       

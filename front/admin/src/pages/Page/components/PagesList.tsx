@@ -1,33 +1,53 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getPagesListRequest } from '../redux/actions';
+import { getPagesListRequest, createPageRequest } from '../redux/actions';
 import { IStore } from '@store/reducer';
-import { pagesSelector, isLoadingSelector } from '../redux/selectors';
+import { pagesSelector, isLoadingSelector, isFormLoadingSelector, errorSelector } from '../redux/selectors';
 import { IPage } from '../types';
 import Preloader from '@components/Preloader/Preloader';
 import List from '@components/List/List';
 import SettingsRoundedIcon from '@material-ui/icons/SettingsRounded';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { makeStyles, Theme } from '@material-ui/core/styles';
 import Dialog from '@components/Dialog/Dialog';
 import PagesForm from '@pages/Page/components/PagesForm';
+import { IPageReducer } from '../types';
 
 interface Props {
   getPagesListRequest: Function;
-  pages: Array<IPage>;
-  isLoading: boolean;
+  createPageRequest: Function;
+  pages: IPageReducer['pages'];
+  isLoading: IPageReducer['isLoading'];
   showCreateModal?: boolean;
-  onCreateModalClose?: () => any;
+  onCreateModalClose: () => any;
+  isFormLoading: IPageReducer['isFormLoading'];
+  error?: IPageReducer['error'];
 }
 
 function PagesList(props: Props) {
-  const { getPagesListRequest, pages, isLoading, showCreateModal, onCreateModalClose } = props;
+  const {
+    getPagesListRequest,
+    pages,
+    isLoading,
+    showCreateModal,
+    onCreateModalClose,
+    createPageRequest,
+    isFormLoading,
+    error,
+  } = props;
   React.useEffect(() => {
     getPagesListRequest();
   }, []);
 
-  const handleSubmit = (values: any) => {
-    console.log(values);
+  React.useEffect(() => {
+    if (!isFormLoading && !error) {
+      if (showCreateModal) {
+        onCreateModalClose();
+      }
+    }
+  }, [isFormLoading]);
+
+  const handleCreate = (values: any) => {
+    createPageRequest(values);
   };
 
   if (isLoading) {
@@ -50,7 +70,7 @@ function PagesList(props: Props) {
       />
       {showCreateModal && (
         <Dialog title="Создать страницу" open maxWidth="sm" fullWidth showCloseIcon onClose={onCreateModalClose}>
-          <PagesForm onSubmit={handleSubmit} />
+          <PagesForm onSubmit={handleCreate} />
         </Dialog>
       )}
     </React.Fragment>
@@ -61,11 +81,14 @@ const mapStateToProps = (store: IStore) => {
   return {
     pages: pagesSelector(store),
     isLoading: isLoadingSelector(store),
+    isFormLoading: isFormLoadingSelector(store),
+    error: errorSelector(store),
   };
 };
 
 const mapDispatchToProps = {
   getPagesListRequest,
+  createPageRequest,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PagesList);

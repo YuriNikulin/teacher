@@ -1,17 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { reduxForm, InjectedFormProps } from 'redux-form';
-import Grid from '@material-ui/core/Grid';
 import Button from '@components/Button/Button';
 import Input from '@components/Input/Input';
-import { validate, helpers as validateHelpers } from '@helpers/validate';
-import { fields } from '@constants/validation';
+import { validate } from '@helpers/validate';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { IPage, Error } from '../types';
 import { IStore } from '@store/reducer';
-import { isLoadingSelector } from '../redux/selectors';
+import { isFormLoadingSelector, errorSelector } from '../redux/selectors';
 import { PAGE_FORM_NAME } from '../redux/constants';
-import Wysiwig from '@components/Wysiwig/Wysiwig';
 import Field from '@components/Field/Field';
 import Form from '@components/Form/Form';
 
@@ -41,7 +38,15 @@ const PagesForm: React.FunctionComponent<InjectedFormProps & IProps> = props => 
         variant="outlined"
         error={typeof error === 'object' && error.name}
       />
-      <Field name="url" component={Input} customLabel="Адрес" placeholder="/news" fullWidth variant="outlined" />
+      <Field
+        name="url"
+        component={Input}
+        customLabel="Адрес"
+        placeholder="/news"
+        fullWidth
+        variant="outlined"
+        error={typeof error === 'object' && error.url}
+      />
       <Field
         name="title"
         component={Input}
@@ -77,8 +82,8 @@ export default compose<any>(
   }),
   connect((store: IStore) => {
     return {
-      isLoading: isLoadingSelector(store),
-      // error: errorsSelector(store),
+      isLoading: isFormLoadingSelector(store),
+      error: errorSelector(store),
     };
   }, {}),
 )(PagesForm);

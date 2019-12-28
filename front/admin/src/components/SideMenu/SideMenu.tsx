@@ -1,11 +1,13 @@
 import React from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { Resizable, ResizableBox } from 'react-resizable';
+import { ResizableBox } from 'react-resizable';
+import Typography from '@material-ui/core/Typography';
 import SwapHorizSharpIcon from '@material-ui/icons/SwapHorizSharp';
 
 interface IProps {
   footer?: React.ReactElement;
+  title?: string;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -64,10 +66,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
     boxShadow: theme.shadows[3],
   },
+  title: {
+    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px`,
+    boxShadow: theme.shadows[3],
+  },
 }));
 
 const SideMenu: React.FunctionComponent<IProps> = props => {
   const classes = useStyles();
+  const { title } = props;
   return (
     <div className={classes.sideMenu}>
       <ResizableBox
@@ -83,6 +90,11 @@ const SideMenu: React.FunctionComponent<IProps> = props => {
         maxConstraints={[500, 0]}
         minConstraints={[100, 0]}
       >
+        {title && (
+          <Typography className={classes.title} variant="h6">
+            {title}
+          </Typography>
+        )}
         <div className={classes.wrapper}>{props.children}</div>
         <div className={classes.footer}>{props.footer}</div>
       </ResizableBox>

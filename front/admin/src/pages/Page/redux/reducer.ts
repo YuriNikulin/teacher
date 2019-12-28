@@ -4,6 +4,7 @@ import { IPageReducer } from '../types';
 
 const initialState = {
   isLoading: true,
+  isFormLoading: false,
   pages: [],
 };
 
@@ -26,6 +27,27 @@ function reducer(state: IPageReducer = initialState, action: ActionsTypes) {
       return {
         ...state,
         isLoading: false,
+        error: action.payload,
+      };
+
+    case ACTIONS.CREATE_PAGE_REQUEST:
+      return {
+        ...state,
+        isFormLoading: true,
+      };
+
+    case ACTIONS.CREATE_PAGE_SUCCESS:
+      return {
+        ...state,
+        isFormLoading: false,
+        error: undefined,
+        pages: [...state.pages, action.payload],
+      };
+
+    case ACTIONS.CREATE_PAGE_FAILURE:
+      return {
+        ...state,
+        isFormLoading: false,
         error: action.payload,
       };
 
