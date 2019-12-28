@@ -16,9 +16,18 @@ interface IProps {}
 const Dashboard: React.FunctionComponent<IProps> = props => {
   const [showModal, setShowModal] = React.useState<boolean>(true);
 
-  const handleAddPageClick = () => {
+  const openModal = () => {
     setShowModal(true);
   };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
+  const handleSubmit = (values: any) => {
+    console.log(values);
+  };
+
   return (
     <React.Fragment>
       <FlexWrapper
@@ -27,7 +36,7 @@ const Dashboard: React.FunctionComponent<IProps> = props => {
           <SideMenu
             footer={
               <Tooltip message="Создать страницу" anchorOrigin={{ vertical: 'center', horizontal: 'right' }}>
-                <Fab color="primary" size="small" onClick={handleAddPageClick}>
+                <Fab color="primary" size="small" onClick={openModal}>
                   <AddIcon />
                 </Fab>
               </Tooltip>
@@ -39,10 +48,10 @@ const Dashboard: React.FunctionComponent<IProps> = props => {
         content={<div>CONTENT</div>}
       />
       {showModal && (
-        <Dialog open maxWidth="sm" fullWidth>
+        <Dialog open maxWidth="sm" fullWidth onClose={closeModal}>
           <DialogTitle>Создать страницу</DialogTitle>
           <DialogContent>
-            <PagesForm />
+            <PagesForm onSubmit={handleSubmit} />
           </DialogContent>
         </Dialog>
       )}

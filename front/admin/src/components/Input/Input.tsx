@@ -4,7 +4,6 @@ import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 
 const Input: React.FunctionComponent<WrappedFieldProps & TextFieldProps> = props => {
   const { input, meta, error, ...rest } = props;
-
   return (
     <TextField
       {...rest}

@@ -18,9 +18,9 @@ const Login: React.FunctionComponent<IProps> = props => {
 
   return (
     <div>
-      <Dialog open maxWidth="sm" fullWidth>
+      <Dialog open maxWidth="xs" fullWidth>
         <DialogTitle>Вход</DialogTitle>
-        <DialogContent>
+        <DialogContent style={{ maxWidth: 500 }}>
           <LoginForm onSubmit={handleSubmit} />
         </DialogContent>
       </Dialog>

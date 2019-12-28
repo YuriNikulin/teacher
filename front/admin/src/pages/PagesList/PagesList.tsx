@@ -34,8 +34,6 @@ function PagesList(props: Props) {
     return <Preloader position="absolute" />;
   }
 
-  console.log(pages);
-
   return (
     <React.Fragment>
       <List

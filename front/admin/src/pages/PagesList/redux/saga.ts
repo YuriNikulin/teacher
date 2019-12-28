@@ -18,7 +18,6 @@ export function* handleGetPagesListRequest() {
     method: 'GET',
   } as IRequestConfig);
 
-  console.log(res);
   if (!res.success) {
     yield put(getPagesListFailure(res.data));
     return;

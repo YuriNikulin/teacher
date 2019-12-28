@@ -7,9 +7,9 @@ export interface IValidateRule {
 export type IValidateConfig<T> = {
   [P in keyof T]: {
     isRequired?: boolean;
-    rules?: Array<IValidateRule>
-  }
-}
+    rules?: Array<IValidateRule>;
+  };
+};
 
 export const validate = <T>(config: IValidateConfig<T>) => {
   return (values: T) => {
@@ -18,7 +18,7 @@ export const validate = <T>(config: IValidateConfig<T>) => {
       return errors;
     }
 
-    for (let key in config) {
+    for (const key in config) {
       const currentValue = values[key];
       const currentConfig = config[key];
       if (currentConfig.isRequired && !currentValue) {
@@ -38,8 +38,8 @@ export const validate = <T>(config: IValidateConfig<T>) => {
     }
 
     return errors;
-  }
-}
+  };
+};
 
 export const helpers = {
   minLength: (min: number) => (value?: any) => {
@@ -48,5 +48,5 @@ export const helpers = {
     } else {
       return false;
     }
-  }
-}
+  },
+};
