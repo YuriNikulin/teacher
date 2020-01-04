@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getPagesListRequest, createPageRequest, deletePageRequest } from '../redux/actions';
+import { getPagesListRequest, createPageRequest, deletePageRequest, editPageRequest } from '../redux/actions';
 import { IStore } from '@store/reducer';
 import { pagesSelector, isLoadingSelector, isFormLoadingSelector, errorSelector } from '../redux/selectors';
 import { IPage } from '../types';
@@ -18,6 +18,7 @@ interface Props {
   getPagesListRequest: Function;
   createPageRequest: Function;
   deletePageRequest: Function;
+  editPageRequest: Function;
   pages: IPageReducer['pages'];
   isLoading: IPageReducer['isLoading'];
   showCreateModal?: boolean;
@@ -37,7 +38,9 @@ function PagesList(props: Props) {
     isFormLoading,
     error,
     deletePageRequest,
+    editPageRequest,
   } = props;
+  const [activeEditedModal, setActiveEditedModal] = React.useState<IPage | null>(null);
   React.useEffect(() => {
     getPagesListRequest();
   }, []);
@@ -47,11 +50,17 @@ function PagesList(props: Props) {
       if (showCreateModal) {
         onCreateModalClose();
       }
+
+      setActiveEditedModal(null);
     }
   }, [isFormLoading]);
 
   const handleCreate = (values: any) => {
     createPageRequest(values);
+  };
+
+  const handleEdit = (values: any) => {
+    editPageRequest(values);
   };
 
   const handleDelete = (page: IPage) => {
@@ -79,6 +88,8 @@ function PagesList(props: Props) {
       .catch(() => {});
   };
 
+  const handleEditClick = (page: IPage) => setActiveEditedModal(page);
+
   if (isLoading) {
     return <Preloader position="absolute" />;
   }
@@ -91,7 +102,11 @@ function PagesList(props: Props) {
             title: page.name,
             description: page.url,
             buttons: [
-              { component: <SettingsRoundedIcon fontSize="small" />, description: 'Редактировать' },
+              {
+                component: <SettingsRoundedIcon fontSize="small" />,
+                description: 'Редактировать',
+                onClick: () => handleEditClick(page),
+              },
               {
                 component: <DeleteIcon color="error" fontSize="small" />,
                 description: 'Удалить',
@@ -104,6 +119,18 @@ function PagesList(props: Props) {
       {showCreateModal && (
         <Dialog title="Создать страницу" open maxWidth="sm" fullWidth showCloseIcon onClose={onCreateModalClose}>
           <PagesForm onSubmit={handleCreate} submitText="Создать" />
+        </Dialog>
+      )}
+      {!!activeEditedModal && (
+        <Dialog
+          title="Редактировать страницу"
+          open
+          maxWidth="sm"
+          fullWidth
+          showCloseIcon
+          onClose={() => setActiveEditedModal(null)}
+        >
+          <PagesForm onSubmit={handleEdit} submitText="Сохранить" initialValues={activeEditedModal} />
         </Dialog>
       )}
     </React.Fragment>
@@ -123,6 +150,7 @@ const mapDispatchToProps = {
   getPagesListRequest,
   createPageRequest,
   deletePageRequest,
+  editPageRequest,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PagesList);

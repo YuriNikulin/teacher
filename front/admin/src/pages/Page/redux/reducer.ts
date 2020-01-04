@@ -1,6 +1,6 @@
 import { ActionsTypes } from './actions';
 import * as ACTIONS from './constants';
-import { IPageReducer } from '../types';
+import { IPageReducer, IPage } from '../types';
 
 const initialState = {
   isLoading: true,
@@ -21,6 +21,7 @@ function reducer(state: IPageReducer = initialState, action: ActionsTypes) {
         ...state,
         isLoading: false,
         pages: action.payload,
+        error: undefined,
       };
 
     case ACTIONS.GET_PAGES_LIST_FAILURE:
@@ -31,6 +32,7 @@ function reducer(state: IPageReducer = initialState, action: ActionsTypes) {
       };
 
     case ACTIONS.CREATE_PAGE_REQUEST:
+    case ACTIONS.EDIT_PAGE_REQUEST:
       return {
         ...state,
         isFormLoading: true,
@@ -45,6 +47,7 @@ function reducer(state: IPageReducer = initialState, action: ActionsTypes) {
       };
 
     case ACTIONS.CREATE_PAGE_FAILURE:
+    case ACTIONS.EDIT_PAGE_FAILURE:
       return {
         ...state,
         isFormLoading: false,
@@ -58,10 +61,10 @@ function reducer(state: IPageReducer = initialState, action: ActionsTypes) {
       };
 
     case ACTIONS.DELETE_PAGE_SUCCESS:
-      // const removedIndex =
       return {
         ...state,
         isLoading: false,
+        error: undefined,
         pages: [...state.pages.filter(page => page.id !== action.payload)],
       };
 
@@ -69,6 +72,18 @@ function reducer(state: IPageReducer = initialState, action: ActionsTypes) {
       return {
         ...state,
         isLoading: false,
+      };
+
+    case ACTIONS.EDIT_PAGE_SUCCESS:
+      const updatedIndex = state.pages.findIndex((item: IPage) => item.id === action.payload.id);
+      if (updatedIndex === -1) {
+        return state;
+      }
+      return {
+        ...state,
+        isFormLoading: false,
+        error: undefined,
+        pages: [...state.pages.slice(0, updatedIndex), action.payload, ...state.pages.slice(updatedIndex + 1)],
       };
 
     default:

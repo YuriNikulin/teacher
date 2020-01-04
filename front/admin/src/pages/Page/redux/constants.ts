@@ -25,4 +25,13 @@ export type DELETE_PAGE_SUCCESS_TYPE = typeof DELETE_PAGE_SUCCESS;
 export const DELETE_PAGE_FAILURE = '@@login/DELETE_PAGE_FAILURE';
 export type DELETE_PAGE_FAILURE_TYPE = typeof DELETE_PAGE_FAILURE;
 
+export const EDIT_PAGE_REQUEST = '@@login/EDIT_PAGE_REQUEST';
+export type EDIT_PAGE_REQUEST_TYPE = typeof EDIT_PAGE_REQUEST;
+
+export const EDIT_PAGE_SUCCESS = '@@login/EDIT_PAGE_SUCCESS';
+export type EDIT_PAGE_SUCCESS_TYPE = typeof EDIT_PAGE_SUCCESS;
+
+export const EDIT_PAGE_FAILURE = '@@login/EDIT_PAGE_FAILURE';
+export type EDIT_PAGE_FAILURE_TYPE = typeof EDIT_PAGE_FAILURE;
+
 export const PAGE_FORM_NAME = 'page';

@@ -15,8 +15,17 @@ export const routes: {
 } = {
   dashboard: {
     path: `${basePath}`,
-    render: function _Dashboard(): JSX.Element {
-      return <Lazy component={() => import('@pages/Dashboard/Dashboard')} />;
+    render: function _Dashboard(): any {
+      return () => <Lazy component={() => import('@pages/Dashboard/Dashboard')} />;
+    },
+  },
+  page: {
+    path: `${basePath}/page/:id`,
+    render: function _Page(params: any): any {
+      return () => {
+        console.log(params);
+        return <div></div>;
+      };
     },
   },
   users: {

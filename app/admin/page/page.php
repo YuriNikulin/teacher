@@ -101,7 +101,8 @@
         "name" => 'getName',
         "title" => 'getTitle',
         "styles" => 'getStyles',
-        "url" => 'getUrl'
+        "url" => 'getUrl',
+        "id" => 'getId'
       )));
       return;
     }
@@ -123,6 +124,22 @@
         CustomResponse::ajaxError(400, 'Страница не найдена');
         return;
       }
+
+      if (isset($body['url'])) {
+        $pageWithSameUrl = CustomEntityManager::$entityManager
+          ->getRepository('Page')
+          ->findBy(['url' => $body['url']]);
+        
+        if ($pageWithSameUrl) {
+          foreach ($pageWithSameUrl as $item) {
+            if ($item->getId() !== $page->getId()) {
+              CustomResponse::ajaxError(400, array('url' => 'Страница с таким url уже существует'));
+              return;
+            }
+          }
+        }
+      }
+
       
       $page = CustomEntityManager::updateEntity($page, $body, array(
         "name" => 'setName',
@@ -136,7 +153,8 @@
         "name" => 'getName',
         "title" => 'getTitle',
         "styles" => 'getStyles',
-        "url" => 'getUrl'
+        "url" => 'getUrl',
+        "id" => 'getId'
       )));
       return;
     }
@@ -223,7 +241,7 @@
 
       $pages = CustomEntityManager::$entityManager
         ->getRepository("Page")
-        ->findAll();
+        ->findBy(array(), array('id' => 'ASC'));
 
       $_pages = array();
       foreach($pages as $item) {
