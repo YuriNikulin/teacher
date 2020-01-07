@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { onePageSelector, isFormLoadingSelector, oneDraftSelector } from '../redux/selectors';
 import { IStore } from '@store/reducer';
 import { IPage, ILayout, IBlock } from '../types';
-import { getPageRequest, changeDraft, deleteDraft } from '../redux/actions';
+import { getPageRequest, changeDraft, deleteDraft, ChangeDraftAction } from '../redux/actions';
 import api, { IResponse } from '@helpers/api';
 import { onePageActionApiUrl, changePageLayoutApiUrl } from '../redux/saga';
 import Preloader from '@components/Preloader/Preloader';
@@ -15,7 +15,8 @@ import PagesList from './PagesList';
 import Dialog from '@components/Dialog/Dialog';
 import { isLoadingSelector } from '@pages/Page/redux/selectors';
 import BlockForm from './BlockForm';
-import { isEqual } from '@helpers/utils';
+import { isEqual, reorder } from '@helpers/utils';
+import { OnDragEndParams } from '@components/Draggable/Draggable';
 
 interface Props {
   activePageId: string;
@@ -78,8 +79,12 @@ function PagesLayoutConstructor(props: Props) {
 
   const currentLayout = activeDraft || (activePage && activePage.blocks);
 
-  const changeDraft = (config: { pageId: IPage['id']; newDraft: ILayout }) => {
-    props.changeDraft(config);
+  const changeDraft = (config: ChangeDraftAction['payload']) => {
+    if (!activePage || !activePage.blocks) return;
+    const shouldUpdate =
+      config.newDraft.map(block => block.id).join() !== activePage.blocks.map(block => block.id).join() ||
+      config.newDraft.some(block => block.isDeleted || block.isTouched || (block.isNew && !block.isDeleted));
+    props.changeDraft({ ...config, shouldUpdate });
   };
 
   const handleAddBlock = (values: IBlock) => {
@@ -167,6 +172,15 @@ function PagesLayoutConstructor(props: Props) {
     setIsLoading(false);
   };
 
+  const handleLayoutChange = (result: OnDragEndParams) => {
+    if (!currentLayout || !activePage || !activePage.blocks || result.destination === result.source) return;
+    const newArray = reorder(currentLayout, result.source, result.destination);
+    changeDraft({
+      pageId: activePageId,
+      newDraft: newArray,
+    });
+  };
+
   if (isLoading) {
     return <Preloader position="absolute" size={60} />;
   }
@@ -199,6 +213,7 @@ function PagesLayoutConstructor(props: Props) {
         blocks={currentLayout}
         onBlockChange={handleBlockChange}
         onBlockChangeCancel={handleBlockChangeCancel}
+        onLayoutChange={handleLayoutChange}
       />
       {showAddBlockModal && (
         <Dialog title="Добавить блок" open maxWidth="md" fullWidth showCloseIcon onClose={handleAddModalClose}>

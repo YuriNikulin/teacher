@@ -235,8 +235,13 @@
         } else if (isset($block['isTouched']) && $block['isTouched']) {
           $_block = _Block::handleChangeBlock($block['id'], $block);
           array_push($resultBlocksIds, $_block->getId());
+        } else {
+          $_block = CustomEntityManager::$entityManager->find('Block', $block['id']);
+          array_push($resultBlocksIds, $_block->getId());
         }
       }
+
+      // print_r($resultBlocksIds);
 
       $page->rearrangeBlocks($resultBlocksIds);
       CustomEntityManager::$entityManager->flush();

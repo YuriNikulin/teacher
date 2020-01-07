@@ -1,4 +1,3 @@
-import APP_STORE_CONSTANTS from './constants';
 import { combineReducers } from 'redux';
 import { reducer as formReducer, FormReducer } from 'redux-form';
 import { ILoginReducer } from '@pages/Login/types';

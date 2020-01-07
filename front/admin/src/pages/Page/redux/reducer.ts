@@ -1,6 +1,8 @@
 import { ActionsTypes } from './actions';
 import * as ACTIONS from './constants';
-import { IPageReducer, IPage } from '../types';
+import * as APP_ACTIONS from '@store/constants';
+import { ActionTypes as AppActionTypes } from '@store/actions';
+import { IPageReducer, IPage, IBlock } from '../types';
 
 const initialState = {
   isLoading: true,
@@ -9,7 +11,7 @@ const initialState = {
   drafts: {},
 };
 
-function reducer(state: IPageReducer = initialState, action: ActionsTypes) {
+function reducer(state: IPageReducer = initialState, action: ActionsTypes | AppActionTypes) {
   switch (action.type) {
     case ACTIONS.GET_PAGES_LIST_REQUEST:
       return {
@@ -88,15 +90,11 @@ function reducer(state: IPageReducer = initialState, action: ActionsTypes) {
       };
 
     case ACTIONS.CHANGE_DRAFT:
-      const { newDraft } = action.payload;
-      const statesAreDifferent = newDraft.some(block => {
-        return block.isDeleted || block.isTouched || (block.isNew && !block.isDeleted);
-      });
       return {
         ...state,
         drafts: {
           ...state.drafts,
-          [action.payload.pageId]: statesAreDifferent ? action.payload.newDraft : undefined,
+          [action.payload.pageId]: action.payload.shouldUpdate ? action.payload.newDraft : undefined,
         },
       };
 
@@ -108,6 +106,9 @@ function reducer(state: IPageReducer = initialState, action: ActionsTypes) {
           [action.payload]: undefined,
         },
       };
+
+    case APP_ACTIONS.RESET:
+      return initialState;
 
     default:
       return state;

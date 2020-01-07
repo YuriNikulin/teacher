@@ -1,35 +1,13 @@
-import CONSTANTS from './constants';
+import * as ACTIONS from './constants';
 
-export type IAddLoading = () => {
-  type: typeof CONSTANTS.TYPE_ADD_LOADING;
-};
+export interface Reset {
+  type: ACTIONS.RESET_TYPE;
+}
 
-export const addLoading: IAddLoading = () => {
+export function reset() {
   return {
-    type: CONSTANTS.TYPE_ADD_LOADING,
+    type: ACTIONS.RESET,
   };
-};
+}
 
-export type IRemoveLoading = () => {
-  type: typeof CONSTANTS.TYPE_REMOVE_LOADING;
-};
-
-export const removeLoading: IRemoveLoading = () => {
-  return {
-    type: CONSTANTS.TYPE_REMOVE_LOADING,
-  };
-};
-
-export type ISwitchTheme = (
-  payload: string,
-) => {
-  type: typeof CONSTANTS.TYPE_SWITCH_THEME;
-  payload: string;
-};
-
-export const switchTheme: ISwitchTheme = (payload: string) => {
-  return {
-    type: CONSTANTS.TYPE_SWITCH_THEME,
-    payload,
-  };
-};
+export type ActionTypes = Reset;

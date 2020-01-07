@@ -13,6 +13,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Dialog from '@components/Dialog/Dialog';
 import BlockForm from './BlockForm';
 import ReplayIcon from '@material-ui/icons/Replay';
+import Draggable, { OnDragEndParams } from '@components/Draggable/Draggable';
 
 interface Props {
   blocks: ILayout;
@@ -20,6 +21,7 @@ interface Props {
   onBlockDelete: (id: IBlock['id'], value: boolean) => void;
   onBlockChange: (values: IBlock) => any;
   onBlockChangeCancel: (id: IBlock['id']) => any;
+  onLayoutChange: (result: OnDragEndParams) => any;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -29,11 +31,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   block: {
     flexGrow: 1,
+    paddingBottom: theme.spacing(2),
+  },
+  blockContent: {
     backgroundColor: '#fff',
-    marginBottom: theme.spacing(2),
     boxShadow: theme.shadows[1],
     position: 'relative',
-
     '&:hover': {
       boxShadow: theme.shadows[3],
       '& .toolbar': {
@@ -90,12 +93,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   list: {
     minHeight: 100,
+    position: 'relative',
   },
 }));
 
 function PagesLayoutConstructorBody(props: Props) {
   const classes = useStyles();
-  const { blocks, onBlockAddClick, onBlockDelete, onBlockChange, onBlockChangeCancel } = props;
+  const { blocks, onBlockAddClick, onBlockDelete, onBlockChange, onBlockChangeCancel, onLayoutChange } = props;
   const [activeEditedBlock, setActiveEditedBlock] = React.useState<IBlock | null>(null);
 
   const handleBlockChange = (values: IBlock) => {
@@ -112,73 +116,79 @@ function PagesLayoutConstructorBody(props: Props) {
         <div
           className={classNames({
             [classes.block]: true,
-            [classes.blockDeleted]: isDeleted,
           })}
         >
           <div
             className={classNames({
-              [classes.blockHeader]: true,
-              [classes.blockHeaderDeleted]: isDeleted,
-              [classes.blockHeaderTouched]: isTouched,
+              [classes.blockContent]: true,
+              [classes.blockDeleted]: isDeleted,
             })}
           >
-            <Typography>{displayName}</Typography>
-            <Typography variant="body2" color="textSecondary">
-              {id}
-            </Typography>
-          </div>
-          <div
-            className={classNames({
-              [classes.blockBody]: true,
-              [classes.blockBodyDeleted]: isDeleted,
-            })}
-          >
-            <div dangerouslySetInnerHTML={{ __html: layout }} />
-          </div>
-          <div
-            className={classNames({
-              [classes.blockToolbar]: true,
-              toolbar: true,
-            })}
-          >
-            {!isDeleted ? (
-              <React.Fragment>
-                <Tooltip message="Удалить блок" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-                  <IconButton onClick={() => onBlockDelete(id, true)}>
-                    <DeleteIcon color="error" fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip message="Редактировать блок" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-                  <IconButton onClick={() => setActiveEditedBlock(props)}>
-                    <SettingsRoundedIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip message="Скрыть блок" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-                  <IconButton>
-                    <VisibilityIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-                {isTouched && (
-                  <Tooltip message="Отменить изменения" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-                    <IconButton onClick={() => onBlockChangeCancel(id)}>
-                      <ReplayIcon fontSize="small" />
+            <div
+              className={classNames({
+                [classes.blockHeader]: true,
+                [classes.blockHeaderDeleted]: isDeleted,
+                [classes.blockHeaderTouched]: isTouched,
+              })}
+            >
+              <Typography>{displayName}</Typography>
+              <Typography variant="body2" color="textSecondary">
+                {id}
+              </Typography>
+            </div>
+            <div
+              className={classNames({
+                [classes.blockBody]: true,
+                [classes.blockBodyDeleted]: isDeleted,
+              })}
+            >
+              <div dangerouslySetInnerHTML={{ __html: layout }} />
+            </div>
+            <div
+              className={classNames({
+                [classes.blockToolbar]: true,
+                toolbar: true,
+              })}
+            >
+              {!isDeleted ? (
+                <React.Fragment>
+                  <Tooltip message="Удалить блок" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+                    <IconButton onClick={() => onBlockDelete(id, true)}>
+                      <DeleteIcon color="error" fontSize="small" />
                     </IconButton>
                   </Tooltip>
-                )}
-              </React.Fragment>
-            ) : (
-              <React.Fragment>
-                <Typography variant="body2">Этот блок будет удалён.</Typography>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  style={{ marginLeft: 8 }}
-                  onClick={() => onBlockDelete(id, false)}
-                >
-                  Отменить
-                </Button>
-              </React.Fragment>
-            )}
+                  <Tooltip message="Редактировать блок" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+                    <IconButton onClick={() => setActiveEditedBlock(props)}>
+                      <SettingsRoundedIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip message="Скрыть блок" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+                    <IconButton>
+                      <VisibilityIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                  {isTouched && (
+                    <Tooltip message="Отменить изменения" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+                      <IconButton onClick={() => onBlockChangeCancel(id)}>
+                        <ReplayIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  )}
+                </React.Fragment>
+              ) : (
+                <React.Fragment>
+                  <Typography variant="body2">Этот блок будет удалён.</Typography>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    style={{ marginLeft: 8 }}
+                    onClick={() => onBlockDelete(id, false)}
+                  >
+                    Отменить
+                  </Button>
+                </React.Fragment>
+              )}
+            </div>
           </div>
         </div>
         {!!activeEditedBlock && (
@@ -199,9 +209,11 @@ function PagesLayoutConstructorBody(props: Props) {
   return (
     <Container className={classes.container}>
       <div className={classes.list}>
-        {blocks.map((block: IBlock) => {
-          return <Block key={block.id} {...block} />;
-        })}
+        <Draggable onDragEnd={onLayoutChange}>
+          {blocks.map((block: IBlock) => {
+            return <Block key={block.id} {...block} />;
+          })}
+        </Draggable>
       </div>
       <Button
         variant="outlined"

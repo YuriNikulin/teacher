@@ -28,3 +28,11 @@ export const isEqual = (a: any, b: any, keys?: Array<string | number>): any => {
     return a === b;
   }
 };
+
+export const reorder = (list: Array<any>, start: number, end: number) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(start, 1);
+  result.splice(end, 0, removed);
+
+  return result;
+};

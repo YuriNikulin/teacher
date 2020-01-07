@@ -1,6 +1,7 @@
 import { takeLatest, getContext, call, put } from 'redux-saga/effects';
 import { ME_REQUEST, LOGOUT_REQUEST } from './constants';
 import { MeRequestAction, meFailure, meSuccess, logoutSuccess, logoutFailure } from './actions';
+import { reset } from '@store/actions';
 import { IApiClient, IResponse, IRequestConfig } from '@helpers/api';
 import { IUser } from '../types';
 import Cookies from 'cookies-js';
@@ -49,6 +50,8 @@ export function* handleLogoutRequest() {
   } else {
     yield put(logoutFailure());
   }
+
+  yield put(reset());
 
   return;
 }

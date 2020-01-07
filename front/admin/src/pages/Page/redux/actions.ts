@@ -189,6 +189,7 @@ export interface ChangeDraftAction {
   payload: {
     pageId: IPage['id'];
     newDraft: ILayout;
+    shouldUpdate?: boolean;
   };
 }
 
