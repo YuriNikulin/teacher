@@ -45,7 +45,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     top: 0,
     bottom: 0,
     width: 20,
-    // boxShadow: theme.shadows[7],
     cursor: 'ew-resize',
     display: 'block',
 

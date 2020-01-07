@@ -1,13 +1,15 @@
+/* eslint-disable react/display-name */
 import React from 'react';
 import { HookRouter } from 'hookrouter';
 import Lazy from '@components/Lazy/Lazy';
-// import Dashboard from '@pages/Dashboard/Dashboard';
+import Page from '@pages/Page/Page';
 
 const basePath = '/teacher/admin';
 
 interface Route {
   path: string;
   render: (params: HookRouter.QueryParams) => JSX.Element;
+  getPath?: (params: any) => string;
 }
 
 export const routes: {
@@ -21,11 +23,11 @@ export const routes: {
   },
   page: {
     path: `${basePath}/page/:id`,
+    getPath: (id: string) => {
+      return `${basePath}/page/${id}`;
+    },
     render: function _Page(params: any): any {
-      return () => {
-        console.log(params);
-        return <div></div>;
-      };
+      return () => <Page activePage={Number(params.id)} />;
     },
   },
   users: {

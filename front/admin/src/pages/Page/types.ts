@@ -4,7 +4,7 @@ export interface IPage {
   title: string;
   styles: string;
   id: string;
-  blocks?: Array<any>;
+  blocks?: Array<IBlock>;
 }
 
 export type Error = Partial<IPage> | string;
@@ -14,4 +14,20 @@ export interface IPageReducer {
   isFormLoading: boolean;
   error?: Error;
   pages: Array<IPage>;
+  drafts: Record<string, ILayout | undefined>;
 }
+
+export interface IBlock {
+  id: string;
+  name?: string;
+  title?: string;
+  styles?: string;
+  order: number;
+  layout: string;
+  isHidden?: boolean;
+  isNew?: boolean;
+  isTouched?: boolean;
+  isDeleted?: boolean;
+}
+
+export type ILayout = IBlock[];

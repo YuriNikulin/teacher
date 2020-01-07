@@ -4,6 +4,7 @@
   use Doctrine\ORM\Query;
   use Auth\CustomAuth;
   use Response\CustomResponse;
+  use Controller\_Block;
   require_once(__DIR__.'/../../entities/Page.php');
   require_once(__DIR__.'/../../../config.php');
 
@@ -173,6 +174,12 @@
       }
 
       $page = CustomEntityManager::$entityManager->find('Page', $params['id']);
+
+      if (!$page) {
+        CustomResponse::ajaxError(400, 'Страница не найдена');
+        return;
+      }
+
       $blocks = $page->getBlocks();
       $page = CustomEntityManager::getEntityArray($page, array(
         "id" => "getId",
@@ -185,7 +192,9 @@
           return CustomEntityManager::getEntityArray($block, array(
             "id" => "getId",
             "name" => "getName",
-            "layout" => "getLayout"
+            "layout" => "getLayout",
+            "title" => "getTitle",
+            "styles" => "getStyles"
           ));
         })->toArray();
 
@@ -216,17 +225,34 @@
         return;
       }
 
-      $page->rearrangeBlocks($body['data']);
-      CustomEntityManager::$entityManager->flush();
+      $resultBlocksIds = array();
+      foreach($body['data'] as $index=>$block) {
+        if (isset($block['isNew'])) {
+          $_block = _Block::handleCreateBlock($block, $page->getId());
+          array_push($resultBlocksIds, $_block->getId());
+        } else if (isset($block['isDeleted']) && $block['isDeleted']) {
+          _Block::handleDeleteBlock($block['id']);
+        } else if (isset($block['isTouched']) && $block['isTouched']) {
+          $_block = _Block::handleChangeBlock($block['id'], $block);
+          array_push($resultBlocksIds, $_block->getId());
+        }
+      }
 
+      $page->rearrangeBlocks($resultBlocksIds);
+      CustomEntityManager::$entityManager->flush();
+      // sleep(2);
+      // $page = CustomEntityManager::$entityManager->find('Page', $body['id']);
       $blocks = $page->getBlocks();
-      $blocks = $blocks->map(function($block) {
-        return CustomEntityManager::getEntityArray($block, array(
-          "id" => "getId",
-          "name" => "getName",
-          "layout" => "getLayout"
-        ));
-      })->toArray();
+
+      // $blocks = $blocks->map(function($block) {
+      //   return CustomEntityManager::getEntityArray($block, array(
+      //     "id" => "getId",
+      //     "name" => "getName",
+      //     "title" => "getTitle",
+      //     "styles" => "getStyles",
+      //     "layout" => "getLayout"
+      //   ));
+      // })->toArray();
 
       CustomResponse::ajaxResponse($blocks);
       return;

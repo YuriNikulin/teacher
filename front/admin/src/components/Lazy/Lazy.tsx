@@ -4,13 +4,14 @@ import Preloader from '@components/Preloader/Preloader';
 
 interface Props {
   component: any;
+  props?: any;
 }
 
-function Lazy({ component }: Props): React.ReactElement | null {
+function Lazy({ component, props }: Props): React.ReactElement | null {
   const Component = React.lazy(component);
   return (
     <React.Suspense fallback={<Preloader position="absolute" size={60} />}>
-      <Component />
+      <Component {...props} />
     </React.Suspense>
   );
 }

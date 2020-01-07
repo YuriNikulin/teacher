@@ -13,6 +13,8 @@ import PagesForm from '@pages/Page/components/PagesForm';
 import { IPageReducer } from '../types';
 import Confirmation from '@components/Confirmation/Confirmation';
 import { Typography } from '@material-ui/core';
+import { navigate } from 'hookrouter';
+import { routes } from '@constants/routes';
 
 interface Props {
   getPagesListRequest: Function;
@@ -25,9 +27,10 @@ interface Props {
   onCreateModalClose: () => any;
   isFormLoading: IPageReducer['isFormLoading'];
   error?: IPageReducer['error'];
+  activePage?: string;
 }
 
-function PagesList(props: Props) {
+function PagesList(props: Props): any {
   const {
     getPagesListRequest,
     pages,
@@ -39,10 +42,13 @@ function PagesList(props: Props) {
     error,
     deletePageRequest,
     editPageRequest,
+    activePage,
   } = props;
   const [activeEditedModal, setActiveEditedModal] = React.useState<IPage | null>(null);
   React.useEffect(() => {
-    getPagesListRequest();
+    if (!pages.length) {
+      getPagesListRequest();
+    }
   }, []);
 
   React.useEffect(() => {
@@ -94,6 +100,9 @@ function PagesList(props: Props) {
     return <Preloader position="absolute" />;
   }
 
+  (PagesList as any).setActiveEditedModal = setActiveEditedModal;
+  (PagesList as any).handleDelete = handleDelete;
+
   return (
     <React.Fragment>
       <List
@@ -101,6 +110,10 @@ function PagesList(props: Props) {
           return {
             title: page.name,
             description: page.url,
+            selected: !!activePage && activePage === page.id,
+            onClick: () => {
+              navigate((routes.page as any).getPath(page.id));
+            },
             buttons: [
               {
                 component: <SettingsRoundedIcon fontSize="small" />,

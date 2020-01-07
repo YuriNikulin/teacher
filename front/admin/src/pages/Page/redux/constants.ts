@@ -34,4 +34,20 @@ export type EDIT_PAGE_SUCCESS_TYPE = typeof EDIT_PAGE_SUCCESS;
 export const EDIT_PAGE_FAILURE = '@@login/EDIT_PAGE_FAILURE';
 export type EDIT_PAGE_FAILURE_TYPE = typeof EDIT_PAGE_FAILURE;
 
+export const GET_PAGE_REQUEST = '@@login/GET_PAGE_REQUEST';
+export type GET_PAGE_REQUEST_TYPE = typeof GET_PAGE_REQUEST;
+
+export const GET_PAGE_SUCCESS = '@@login/GET_PAGE_SUCCESS';
+export type GET_PAGE_SUCCESS_TYPE = typeof GET_PAGE_SUCCESS;
+
+export const GET_PAGE_FAILURE = '@@login/GET_PAGE_FAILURE';
+export type GET_PAGE_FAILURE_TYPE = typeof GET_PAGE_FAILURE;
+
+export const CHANGE_DRAFT = '@@login/CHANGE_DRAFT';
+export type CHANGE_DRAFT_TYPE = typeof CHANGE_DRAFT;
+
+export const DELETE_DRAFT = '@@login/DELETE_DRAFT';
+export type DELETE_DRAFT_TYPE = typeof DELETE_DRAFT;
+
 export const PAGE_FORM_NAME = 'page';
+export const BLOCK_FORM_NAME = 'block';

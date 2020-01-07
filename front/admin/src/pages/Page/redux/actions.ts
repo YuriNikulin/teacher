@@ -23,8 +23,14 @@ import {
   EDIT_PAGE_REQUEST_TYPE,
   EDIT_PAGE_SUCCESS,
   EDIT_PAGE_SUCCESS_TYPE,
+  GET_PAGE_REQUEST,
+  GET_PAGE_REQUEST_TYPE,
+  CHANGE_DRAFT_TYPE,
+  CHANGE_DRAFT,
+  DELETE_DRAFT_TYPE,
+  DELETE_DRAFT,
 } from './constants';
-import { IPage } from '../types';
+import { IPage, ILayout } from '../types';
 
 export interface GetPagesListRequstAction {
   type: GET_PAGES_LIST_REQUEST_TYPE;
@@ -166,6 +172,45 @@ export function editPageFailure(payload: EditPageFailureAction['payload']) {
   };
 }
 
+export interface GetPageRequestAction {
+  type: GET_PAGE_REQUEST_TYPE;
+  payload: IPage['id'];
+}
+
+export function getPageRequest(payload: IPage['id']) {
+  return {
+    type: GET_PAGE_REQUEST,
+    payload,
+  };
+}
+
+export interface ChangeDraftAction {
+  type: CHANGE_DRAFT_TYPE;
+  payload: {
+    pageId: IPage['id'];
+    newDraft: ILayout;
+  };
+}
+
+export function changeDraft(payload: ChangeDraftAction['payload']) {
+  return {
+    type: CHANGE_DRAFT,
+    payload,
+  };
+}
+
+export interface DeleteDraftAction {
+  type: DELETE_DRAFT_TYPE;
+  payload: IPage['id'];
+}
+
+export function deleteDraft(payload: DeleteDraftAction['payload']) {
+  return {
+    type: DELETE_DRAFT,
+    payload,
+  };
+}
+
 export type ActionsTypes =
   | GetPagesListRequstAction
   | GetPagesListFailureAction
@@ -178,4 +223,7 @@ export type ActionsTypes =
   | DeletePageFailureAction
   | EditPageFailureAction
   | EditPageRequestAction
-  | EditPageSuccessAction;
+  | EditPageSuccessAction
+  | GetPageRequestAction
+  | ChangeDraftAction
+  | DeleteDraftAction;

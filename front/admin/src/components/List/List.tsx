@@ -20,6 +20,8 @@ interface Item {
   description?: string;
   buttons?: Button[];
   id?: string | number;
+  onClick?: () => any;
+  selected?: boolean;
 }
 
 interface Props {
@@ -37,9 +39,9 @@ function _List(props: Props) {
     <React.Fragment>
       <List>
         {items.map((item: Item, index) => {
-          const { id, title, description, buttons } = item;
+          const { id, title, description, buttons, onClick } = item;
           return (
-            <ListItem button dense key={id || index}>
+            <ListItem button dense key={id || index} onClick={onClick} selected={item.selected}>
               <ListItemText primary={title} secondary={description}></ListItemText>
               {buttons && (
                 <ListItemSecondaryAction key={index}>

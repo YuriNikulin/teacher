@@ -6,6 +6,7 @@ const initialState = {
   isLoading: true,
   isFormLoading: false,
   pages: [],
+  drafts: {},
 };
 
 function reducer(state: IPageReducer = initialState, action: ActionsTypes) {
@@ -84,6 +85,28 @@ function reducer(state: IPageReducer = initialState, action: ActionsTypes) {
         isFormLoading: false,
         error: undefined,
         pages: [...state.pages.slice(0, updatedIndex), action.payload, ...state.pages.slice(updatedIndex + 1)],
+      };
+
+    case ACTIONS.CHANGE_DRAFT:
+      const { newDraft } = action.payload;
+      const statesAreDifferent = newDraft.some(block => {
+        return block.isDeleted || block.isTouched || (block.isNew && !block.isDeleted);
+      });
+      return {
+        ...state,
+        drafts: {
+          ...state.drafts,
+          [action.payload.pageId]: statesAreDifferent ? action.payload.newDraft : undefined,
+        },
+      };
+
+    case ACTIONS.DELETE_DRAFT:
+      return {
+        ...state,
+        drafts: {
+          ...state.drafts,
+          [action.payload]: undefined,
+        },
       };
 
     default:

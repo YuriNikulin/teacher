@@ -2,12 +2,12 @@ import React from 'react';
 import 'react-quill/dist/quill.snow.css';
 import Preloader from '@components/Preloader/Preloader';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { EditorProps } from 'react-draft-wysiwyg';
-import { BaseFieldProps, CommonFieldProps } from 'redux-form';
 import classNames from 'classnames';
-import { RawDraftContentState } from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
+import { EditorState, ContentState, convertFromHTML } from 'draft-js';
 // import {EditorProps} from '@types/react-draft-wysiwyg'
 
 const toolbar = {
@@ -15,16 +15,16 @@ const toolbar = {
   inline: { inDropdown: true },
   list: { inDropdown: true },
   textAlign: { inDropdown: true },
-  link: { inDropdown: true },
-  history: { inDropdown: true },
   blockType: {
+    inDropdown: true,
     options: ['Normal', 'H1', 'H2', 'H3', 'H4'],
   },
-  image: { alt: { present: true, mandatory: true } },
+  image: { inDropdown: true, alt: { present: true, mandatory: true } },
 };
 
-interface Props extends Partial<EditorProps> {
+interface Props {
   addWhitespaceOnTab?: boolean;
+  onChange?: (value: string) => any;
   [key: string]: any;
 }
 
@@ -39,14 +39,11 @@ const useStyles = makeStyles((theme: Theme) => {
     },
     editor: {
       maxWidth: 535,
-      paddingLeft: theme.spacing(2),
+      minHeight: 200,
+      paddingLeft: theme.spacing(2) - 2,
       fontFamily: theme.typography.fontFamily,
     },
-    editorFocused: {
-      // outline: `2px solid ${theme.palette.primary.dark}`,
-      // borderWidth: '2px',
-      // borderColor: theme.palette.primary.dark,
-    },
+    editorFocused: {},
     border: {
       border: `1px solid`,
       borderColor: 'rgba(0, 0, 0, 0.23)',
@@ -62,20 +59,60 @@ const useStyles = makeStyles((theme: Theme) => {
       borderWidth: 2,
       borderColor: theme.palette.primary.dark,
     },
+    wrapperClassname: {
+      position: 'relative',
+      zIndex: 1,
+      padding: 2,
+    },
+    toolbar: {
+      background: 'none',
+      borderLeft: 'none',
+      borderTop: 'none',
+      borderRight: 'none',
+    },
   };
 });
 
-function Wysiwig(props: Props) {
+function Wysiwig(props: Props & Partial<EditorProps>) {
   const classes = useStyles();
   const [isFocused, setIsFocused] = React.useState(false);
-  const handleFocus = () => setIsFocused(true);
-  const handleBlur = () => setIsFocused(false);
+  const [editorState, setEditorState] = React.useState<any>(undefined);
+  const handleFocus = () => {
+    setIsFocused(true);
+    if (props.input) {
+      props.input.onFocus();
+    }
+  };
+  const handleBlur = () => {
+    setIsFocused(false);
+    if (props.input) {
+      props.input.onBlur();
+    }
+  };
   const [WysiwigComponent, setWysiwigComponent] = React.useState<IWysiwigElement | null>(null);
   React.useEffect(() => {
     import('react-draft-wysiwyg').then(Module => {
       setWysiwigComponent(Module);
+      if (props.input && props.input.value) {
+        setEditorState(
+          EditorState.createWithContent(ContentState.createFromBlockArray(convertFromHTML(props.input.value) as any)),
+        );
+      }
     });
   }, []);
+
+  const handleChange = (value: any) => {
+    const _value = draftToHtml(value);
+    if (props.input) {
+      props.input.onChange(_value);
+    }
+  };
+
+  const onEditorStateChange = (state: any) => {
+    setEditorState(state);
+  };
+
+  // console.log(value);
 
   return (
     <div
@@ -86,24 +123,30 @@ function Wysiwig(props: Props) {
     >
       {WysiwigComponent ? (
         <React.Fragment>
+          <div
+            className={classNames({
+              [classes.border]: true,
+              [classes.borderFocused]: isFocused,
+            })}
+          />
           <WysiwigComponent.Editor
             toolbar={{ ...toolbar, image: { ...toolbar.image } }}
             editorClassName={classNames({
               [classes.editor]: true,
               [classes.editorFocused]: isFocused,
             })}
+            wrapperClassName={classNames({
+              [classes.wrapperClassname]: true,
+            })}
+            toolbarClassName={classNames({
+              [classes.toolbar]: true,
+            })}
+            editorState={editorState}
             {...props}
+            onEditorStateChange={onEditorStateChange}
             onFocus={handleFocus}
             onBlur={handleBlur}
-            onChange={value => {
-              console.log(value);
-            }}
-          />
-          <div
-            className={classNames({
-              [classes.border]: true,
-              [classes.borderFocused]: isFocused,
-            })}
+            onChange={handleChange}
           />
         </React.Fragment>
       ) : (

@@ -1,4 +1,5 @@
 <?php
+  namespace Controller;
   use CustomRouter\Router;
   use Database\CustomEntityManager;
   use Auth\CustomAuth;
@@ -21,15 +22,10 @@
       ));
     }
 
-    private function handleCreateBlock($body, $user)
+    public static function handleCreateBlock($body, $parent_id)
     {
-      if (!$user) {
-        CustomResponse::ajaxError(403, 'Необходимо войти в учётную запись');
-        return;
-      }
-
-      if (isset($body['parent_id'])) {
-        $page = CustomEntityManager::$entityManager->find('Page', $body['parent_id']);
+      if ($parent_id) {
+        $page = CustomEntityManager::$entityManager->find('Page', $parent_id);
         if (!$page) {
           CustomResponse::ajaxError(400, 'Страница не найдена');
           return;
@@ -46,7 +42,7 @@
       // print Bool(strlen(trim($body['layout'])));
       // echo $layout;
 
-      $block = CustomEntityManager::updateEntity(new Block(), $body, array(
+      $block = CustomEntityManager::updateEntity(new \Block(), $body, array(
         "name" => 'setName',
         "title" => 'setTitle',
         "styles" => 'setStyles'
@@ -56,13 +52,37 @@
         $block->setParent($page);
       }
       
-      $block->setLayout($body['layout']);
+      $block->setLayout($layout);
       $time = time();
-      $suffix = isset($body['parent_id']) ? $body['parent_id'] : 'common';
+      $suffix = $parent_id ? $parent_id : 'common';
       $random = rand(0, 10000);
-      $block->setId("$time" . "_$random" . "_$suffix");
+      $block->setId("$suffix" . "_$time" . "_$random");
       CustomEntityManager::$entityManager->persist($block);
-      CustomEntityManager::$entityManager->flush();
+      return $block;
+    }
+
+    public static function handleChangeBlock($blockId, $data)
+    {
+      $block = CustomEntityManager::$entityManager->find('Block', $blockId);
+      if (!$block) {
+        return;
+      }
+      $block = CustomEntityManager::updateEntity($block, $data, array(
+        "name" => 'setName',
+        "title" => 'setTitle',
+        "styles" => 'setStyles',
+        "layout" => 'setLayout'
+      ));
+      return $block;
+    }
+
+    public static function handleDeleteBlock($blockId)
+    {
+      $block = CustomEntityManager::$entityManager->find('Block', $blockId);
+      if (!$block) {
+        return;
+      }
+      CustomEntityManager::$entityManager->remove($block);
     }
   }
 

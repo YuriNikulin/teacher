@@ -18,10 +18,16 @@ export interface IApiClient {
 }
 
 class Api {
-  public static makeRequest = async ({ url, method = 'GET', params, body, useBase = true, onError }: any) => {
+  public static makeRequest = async <T>({
+    url,
+    method = 'GET',
+    params,
+    body,
+    useBase = true,
+  }: IRequestConfig): Promise<IResponse<T>> => {
     const options = { method, body: body && JSON.stringify(body) };
     const _url = useBase ? `${base}${url}` : url;
-    let res: IResponse<any> | Response;
+    let res: IResponse<T> | Response;
     try {
       res = await fetch(_url, options);
       res = await res.json();
@@ -33,7 +39,7 @@ class Api {
       };
     }
 
-    return res;
+    return res as IResponse<T>;
   };
 }
 

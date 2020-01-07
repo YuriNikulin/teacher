@@ -1,5 +1,6 @@
 import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
+import classNames from 'classnames';
 
 interface Props {
   header?: React.ReactElement;
@@ -20,10 +21,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   content: {
     flexGrow: 1,
+    position: 'relative',
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+    overflow: 'auto',
+  },
+  contentWithSidemenu: {
+    // paddingLeft: theme.spacing(3),
   },
   sideMenu: {
     flexShrink: 0,
     display: 'flex',
+    position: 'relative',
+    zIndex: 1,
   },
 }));
 
@@ -35,7 +45,14 @@ function FlexWrapper(props: Props) {
       {header}
       <div className={classes.contentWrapper}>
         <div className={classes.sideMenu}>{sidemenu}</div>
-        <main className={classes.content}>{content}</main>
+        <main
+          className={classNames({
+            [classes.content]: true,
+            [classes.contentWithSidemenu]: !!sidemenu,
+          })}
+        >
+          {content}
+        </main>
       </div>
     </div>
   );
