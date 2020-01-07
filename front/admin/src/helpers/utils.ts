@@ -1,5 +1,8 @@
 export const isEqual = (a: any, b: any, keys?: Array<string | number>): any => {
   if (keys) {
+    if (!a || !b) {
+      return a === b;
+    }
     const _a: any = {};
     const _b: any = {};
     keys.forEach(key => {

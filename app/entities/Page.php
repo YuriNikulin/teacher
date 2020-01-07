@@ -131,5 +131,17 @@ class Page
             }
         }
     }
+
+    public function updateLayout()
+    {
+        $blocks = $this->getBlocks();
+        $layout = '';
+        $blocks->map(function($item) use (&$layout) {
+            if (!$item->getIsHidden()) {
+                $layout = $layout . $item->getLayout();
+            }
+        });
+        $this->setLayout($layout);
+    }
 }
 ?>

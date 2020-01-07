@@ -7,6 +7,7 @@ import Button from '@components/Button/Button';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@components/Tooltip/Tooltip';
 import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import SettingsRoundedIcon from '@material-ui/icons/SettingsRounded';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
@@ -22,6 +23,7 @@ interface Props {
   onBlockChange: (values: IBlock) => any;
   onBlockChangeCancel: (id: IBlock['id']) => any;
   onLayoutChange: (result: OnDragEndParams) => any;
+  // onBlockHide: (id: IBlock['id'], value: boolean) => any;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -37,6 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: '#fff',
     boxShadow: theme.shadows[1],
     position: 'relative',
+
     '&:hover': {
       boxShadow: theme.shadows[3],
       '& .toolbar': {
@@ -61,10 +64,28 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: `${theme.spacing(1.5)}px ${theme.spacing(2)}px`,
   },
   blockHeaderDeleted: {},
+  blockHeaderNew: {
+    background: '#B4F9BB',
+  },
   blockHeaderTouched: {
     backgroundColor: theme.palette.primary.light,
     '& *': {
       color: theme.palette.primary.contrastText,
+    },
+  },
+  blockDragging: {
+    boxShadow: theme.shadows[11],
+    '& .toolbar': {
+      display: 'flex',
+    },
+  },
+  blockHidden: {
+    background: theme.palette.grey[300],
+    '& > *': {
+      opacity: 0.6,
+    },
+    '& .toolbar': {
+      display: 'flex',
     },
   },
   blockBody: {
@@ -101,14 +122,23 @@ function PagesLayoutConstructorBody(props: Props) {
   const classes = useStyles();
   const { blocks, onBlockAddClick, onBlockDelete, onBlockChange, onBlockChangeCancel, onLayoutChange } = props;
   const [activeEditedBlock, setActiveEditedBlock] = React.useState<IBlock | null>(null);
+  // console.log(blocks);
+  const foo = [1, 2, 3];
+  // console.log(foo);
 
   const handleBlockChange = (values: IBlock) => {
     setActiveEditedBlock(null);
     onBlockChange(values);
   };
 
-  const Block = (props: IBlock) => {
-    const { name, id, layout, isDeleted, isNew, isTouched } = props;
+  const handleBlockHide = (id: IBlock['id'], value: boolean | undefined) => {
+    const block = blocks.find(block => block.id === id);
+    if (!block) return;
+    onBlockChange({ ...block, is_hidden: value });
+  };
+
+  const Block = (props: IBlock & { isDragging?: boolean }) => {
+    const { name, id, layout, isDeleted, isNew, isTouched, isDragging, is_hidden } = props;
 
     const displayName = name || 'Безымянный блок';
     return (
@@ -122,13 +152,16 @@ function PagesLayoutConstructorBody(props: Props) {
             className={classNames({
               [classes.blockContent]: true,
               [classes.blockDeleted]: isDeleted,
+              [classes.blockDragging]: isDragging,
+              [classes.blockHidden]: is_hidden,
             })}
           >
             <div
               className={classNames({
                 [classes.blockHeader]: true,
                 [classes.blockHeaderDeleted]: isDeleted,
-                [classes.blockHeaderTouched]: isTouched,
+                [classes.blockHeaderTouched]: isTouched && !is_hidden,
+                [classes.blockHeaderNew]: isNew,
               })}
             >
               <Typography>{displayName}</Typography>
@@ -162,12 +195,17 @@ function PagesLayoutConstructorBody(props: Props) {
                       <SettingsRoundedIcon fontSize="small" />
                     </IconButton>
                   </Tooltip>
-                  <Tooltip message="Скрыть блок" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-                    <IconButton>
-                      <VisibilityIcon fontSize="small" />
+
+                  <Tooltip
+                    message={is_hidden ? 'Показывать блок' : 'Скрывать блок'}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                  >
+                    <IconButton onClick={() => handleBlockHide(id, !is_hidden)}>
+                      {!is_hidden ? <VisibilityIcon fontSize="small" /> : <VisibilityOffIcon fontSize="small" />}
                     </IconButton>
                   </Tooltip>
-                  {isTouched && (
+
+                  {isTouched && !is_hidden && (
                     <Tooltip message="Отменить изменения" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
                       <IconButton onClick={() => onBlockChangeCancel(id)}>
                         <ReplayIcon fontSize="small" />

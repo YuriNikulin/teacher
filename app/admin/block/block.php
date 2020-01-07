@@ -31,21 +31,18 @@
           return;
         }
       }
-
       
       if (!isset($body['layout']) || !strlen(trim($body['layout']))) {
         $layout = '<div></div>';
       } else {
         $layout = $body['layout'];
       }
-      
-      // print Bool(strlen(trim($body['layout'])));
-      // echo $layout;
 
       $block = CustomEntityManager::updateEntity(new \Block(), $body, array(
         "name" => 'setName',
         "title" => 'setTitle',
-        "styles" => 'setStyles'
+        "styles" => 'setStyles',
+        "is_hidden" => 'setIsHidden'
       ));
 
       if ($page) {
@@ -71,7 +68,8 @@
         "name" => 'setName',
         "title" => 'setTitle',
         "styles" => 'setStyles',
-        "layout" => 'setLayout'
+        "layout" => 'setLayout',
+        "is_hidden" => 'setIsHidden'
       ));
       return $block;
     }

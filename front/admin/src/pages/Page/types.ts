@@ -24,7 +24,7 @@ export interface IBlock {
   styles?: string;
   order: number;
   layout: string;
-  isHidden?: boolean;
+  is_hidden?: boolean;
   isNew?: boolean;
   isTouched?: boolean;
   isDeleted?: boolean;

@@ -45,6 +45,11 @@ class Block
      */
     protected $order_in_page;
 
+    /** 
+     * @ORM\Column(type="boolean")
+     */
+    protected $is_hidden;
+
     public function getId()
     {
         return $this->id;
@@ -113,6 +118,16 @@ class Block
     public function setOrder($order_in_page)
     {
         $this->order_in_page = $order_in_page;
+    }
+
+    public function getIsHidden()
+    {
+        return $this->is_hidden;
+    }
+
+    public function setIsHidden($is_hidden)
+    {
+        $this->is_hidden = $is_hidden;
     }
 }
 ?>

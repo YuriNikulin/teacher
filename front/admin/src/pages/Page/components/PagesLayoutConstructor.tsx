@@ -94,7 +94,7 @@ function PagesLayoutConstructor(props: Props) {
 
     changeDraft({
       pageId: activePageId,
-      newDraft: [...currentLayout, { ...values, id: `${activePageId}_${Date.now()}`, isNew: true }],
+      newDraft: [...currentLayout, { ...values, id: `${activePageId}_${Date.now()}`, isNew: true, is_hidden: false }],
     });
     setShowAddBlockModal(false);
   };
@@ -118,20 +118,20 @@ function PagesLayoutConstructor(props: Props) {
   };
 
   const handleBlockChange = (values: IBlock) => {
+    // console.log(values);
     if (!currentLayout || !activePage) {
       return;
     }
     const changedIndex = currentLayout.findIndex(item => item.id === values.id);
     const newItem = { ...values };
     const initialItem = activePage.blocks && activePage.blocks.find(item => item.id === values.id);
-
-    if (isEqual(newItem, initialItem, ['name', 'layout', 'styles', 'title'])) {
+    console.log(newItem);
+    console.log(initialItem);
+    if (isEqual(newItem, initialItem, ['name', 'layout', 'styles', 'title', 'is_hidden'])) {
       delete newItem.isTouched;
-    } else {
+    } else if (!newItem.isNew) {
       newItem.isTouched = true;
     }
-
-    console.log(newItem);
 
     changeDraft({
       pageId: activePageId,
@@ -154,7 +154,7 @@ function PagesLayoutConstructor(props: Props) {
       return;
     }
     setIsLoading(true);
-
+    console.log('here');
     const res = await api.makeRequest<ILayout>({
       url: changePageLayoutApiUrl,
       method: 'POST',
@@ -214,6 +214,7 @@ function PagesLayoutConstructor(props: Props) {
         onBlockChange={handleBlockChange}
         onBlockChangeCancel={handleBlockChangeCancel}
         onLayoutChange={handleLayoutChange}
+        // onBlockHide={handleBlockHide}
       />
       {showAddBlockModal && (
         <Dialog title="Добавить блок" open maxWidth="md" fullWidth showCloseIcon onClose={handleAddModalClose}>

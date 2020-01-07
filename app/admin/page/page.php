@@ -181,6 +181,7 @@
       }
 
       $blocks = $page->getBlocks();
+
       $page = CustomEntityManager::getEntityArray($page, array(
         "id" => "getId",
         "name" => "getName",
@@ -188,15 +189,21 @@
         "styles" => "getStyles",
         "url" => "getUrl",
       ));
-      $page['blocks'] = $blocks->map(function($block) {
-          return CustomEntityManager::getEntityArray($block, array(
+
+      $blocksArr = array();
+
+      $blocks->map(function($block) use (&$blocksArr) {
+          array_push($blocksArr, CustomEntityManager::getEntityArray($block, array(
             "id" => "getId",
             "name" => "getName",
             "layout" => "getLayout",
             "title" => "getTitle",
-            "styles" => "getStyles"
-          ));
-        })->toArray();
+            "styles" => "getStyles",
+            "is_hidden" => "getIsHidden"
+          )));
+        });
+
+      $page['blocks'] = $blocksArr;
 
       CustomResponse::ajaxResponse($page);
       return;
@@ -241,23 +248,12 @@
         }
       }
 
-      // print_r($resultBlocksIds);
 
       $page->rearrangeBlocks($resultBlocksIds);
+      $page->updateLayout();
       CustomEntityManager::$entityManager->flush();
-      // sleep(2);
-      // $page = CustomEntityManager::$entityManager->find('Page', $body['id']);
-      $blocks = $page->getBlocks();
 
-      // $blocks = $blocks->map(function($block) {
-      //   return CustomEntityManager::getEntityArray($block, array(
-      //     "id" => "getId",
-      //     "name" => "getName",
-      //     "title" => "getTitle",
-      //     "styles" => "getStyles",
-      //     "layout" => "getLayout"
-      //   ));
-      // })->toArray();
+      $blocks = $page->getBlocks();
 
       CustomResponse::ajaxResponse($blocks);
       return;

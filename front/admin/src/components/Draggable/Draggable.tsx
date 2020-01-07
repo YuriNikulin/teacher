@@ -44,10 +44,10 @@ function _Draggable(props: Props) {
                 const WrappedChild = (props: any) => React.cloneElement(child, props);
                 return (
                   <Draggable draggableId={child.props.id} index={index} key={child.props.id}>
-                    {(provided: any) => {
+                    {(provided: any, snapshot: any) => {
                       return (
                         <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                          <WrappedChild />
+                          <WrappedChild isDragging={snapshot.isDragging} />
                         </div>
                       );
                     }}
