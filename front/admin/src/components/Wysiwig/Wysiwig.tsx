@@ -25,6 +25,7 @@ const toolbar = {
 interface Props {
   addWhitespaceOnTab?: boolean;
   onChange?: (value: string) => any;
+  editorSize?: 'medium' | 'large';
   [key: string]: any;
 }
 
@@ -38,10 +39,16 @@ const useStyles = makeStyles((theme: Theme) => {
       position: 'relative',
     },
     editor: {
-      maxWidth: 535,
-      minHeight: 200,
       paddingLeft: theme.spacing(2) - 2,
       fontFamily: theme.typography.fontFamily,
+      maxWidth: '100%',
+      overflow: 'hidden',
+    },
+    'editor--large': {
+      minHeight: 250,
+    },
+    'editor--medium': {
+      minHeight: 200,
     },
     editorFocused: {},
     border: {
@@ -74,6 +81,7 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 function Wysiwig(props: Props & Partial<EditorProps>) {
+  const { editorSize = 'medium' } = props;
   const classes = useStyles();
   const [isFocused, setIsFocused] = React.useState(false);
   const [editorState, setEditorState] = React.useState<any>(undefined);
@@ -94,9 +102,8 @@ function Wysiwig(props: Props & Partial<EditorProps>) {
     import('react-draft-wysiwyg').then(Module => {
       setWysiwigComponent(Module);
       if (props.input && props.input.value) {
-        setEditorState(
-          EditorState.createWithContent(ContentState.createFromBlockArray(convertFromHTML(props.input.value) as any)),
-        );
+        const contentBlock = htmlToDraft(props.input.value);
+        setEditorState(EditorState.createWithContent(ContentState.createFromBlockArray(contentBlock.contentBlocks)));
       }
     });
   }, []);
@@ -134,6 +141,7 @@ function Wysiwig(props: Props & Partial<EditorProps>) {
             editorClassName={classNames({
               [classes.editor]: true,
               [classes.editorFocused]: isFocused,
+              [(classes as any)[`editor--${editorSize}`]]: true,
             })}
             wrapperClassName={classNames({
               [classes.wrapperClassname]: true,

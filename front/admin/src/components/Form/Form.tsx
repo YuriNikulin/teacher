@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme: Theme) => {
   return {
     item: {
       marginBottom: theme.spacing(3),
+      maxWidth: '100%',
     },
     submit: {
       marginTop: theme.spacing(3),

@@ -37,6 +37,7 @@ const BlockForm: React.FunctionComponent<InjectedFormProps & IProps> = props => 
         customLabel="Содержимое блока"
         placeholder="Контент, который будет выводиться на сайте"
         fullWidth
+        editorSize="large"
         variant="outlined"
         error={typeof error === 'object' && error.name}
       />

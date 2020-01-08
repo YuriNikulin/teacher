@@ -233,12 +233,15 @@
       }
 
       $resultBlocksIds = array();
+      $shouldFlush = false;
       foreach($body['data'] as $index=>$block) {
         if (isset($block['isNew'])) {
           $_block = _Block::handleCreateBlock($block, $page->getId());
           array_push($resultBlocksIds, $_block->getId());
+          $shouldFlush = true;
         } else if (isset($block['isDeleted']) && $block['isDeleted']) {
           _Block::handleDeleteBlock($block['id']);
+          $shouldFlush = true;
         } else if (isset($block['isTouched']) && $block['isTouched']) {
           $_block = _Block::handleChangeBlock($block['id'], $block);
           array_push($resultBlocksIds, $_block->getId());
@@ -248,6 +251,9 @@
         }
       }
 
+      if ($shouldFlush) {
+        CustomEntityManager::$entityManager->flush();
+      }
 
       $page->rearrangeBlocks($resultBlocksIds);
       $page->updateLayout();

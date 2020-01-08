@@ -21,7 +21,7 @@ class Block
     protected $parent;
 
     /** 
-     * @ORM\Column(type="string") 
+     * @ORM\Column(type="text") 
      */
     protected $layout;
 
@@ -36,7 +36,7 @@ class Block
     protected $styles;
 
     /** 
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $name;
 

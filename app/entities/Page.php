@@ -24,7 +24,7 @@ class Page
     protected $url;
 
     /** 
-     * @ORM\Column(type="string", nullable = true)
+     * @ORM\Column(type="text", nullable = true)
      */
     protected $layout;
 
@@ -45,7 +45,7 @@ class Page
     protected $styles;
 
     /** 
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="text")
      */
     protected $name;
 
