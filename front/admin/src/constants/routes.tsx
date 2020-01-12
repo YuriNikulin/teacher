@@ -8,6 +8,7 @@ const basePath = '/teacher/admin';
 
 interface Route {
   path: string;
+  title: (param?: any) => string;
   render: (params: HookRouter.QueryParams) => JSX.Element;
   getPath?: (params: any) => string;
 }
@@ -17,27 +18,31 @@ export const routes: {
 } = {
   dashboard: {
     path: `${basePath}`,
+    title: () => 'Главная',
     render: function _Dashboard(): any {
       return () => <Lazy component={() => import('@pages/Dashboard/Dashboard')} />;
     },
   },
   page: {
     path: `${basePath}/page/:id`,
+    title: (name: string) => `${name}`,
     getPath: (id: string) => {
       return `${basePath}/page/${id}`;
     },
     render: function _Page(params: any): any {
-      return () => <Page activePage={Number(params.id)} />;
+      return () => <Page activePageId={Number(params.id)} />;
     },
   },
   users: {
     path: `${basePath}/users`,
+    title: (name: string) => `Конструктор | ${name}`,
     render: function _Users(): JSX.Element {
       return <div>users</div>;
     },
   },
   user: {
     path: `${basePath}/users/:id`,
+    title: (name: string) => `Конструктор | ${name}`,
     render: function _User(id): JSX.Element {
       return <div>{id}</div>;
     },

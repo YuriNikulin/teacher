@@ -39,3 +39,13 @@ export const reorder = (list: Array<any>, start: number, end: number) => {
 
   return result;
 };
+
+export const replaceImgWithLink = (layout: string) => {
+  const regexp = /<img.*src="(.+\/(.+)\..*?)".*\/>/;
+
+  const replaced = layout.replace(
+    regexp,
+    '<a target="_blank" class="MuiTypography-body2" href="$1">Изображение $2</a>',
+  );
+  return replaced;
+};

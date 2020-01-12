@@ -4,4 +4,5 @@
   require_once 'view/view.php';
   require_once 'page/page.php';
   require_once 'block/block.php';
+  require_once 'image/image.php';
 ?>

@@ -10,6 +10,7 @@ import { IStore } from '@store/reducer';
 import { isFormLoadingSelector, errorSelector } from '../redux/selectors';
 import { BLOCK_FORM_NAME } from '../redux/constants';
 import Field from '@components/Field/Field';
+import { FieldArray } from 'redux-form';
 import Form from '@components/Form/Form';
 import Wysiwig from '@components/Wysiwig/Wysiwig';
 
@@ -17,10 +18,12 @@ interface IProps {
   isLoading: boolean;
   error?: Error;
   submitText?: string;
+  onImageUpload?: (data: any) => any;
+  pageId?: IPage['id'];
 }
 
 const BlockForm: React.FunctionComponent<InjectedFormProps & IProps> = props => {
-  const { isLoading, error, handleSubmit, submitText } = props;
+  const { isLoading, error, handleSubmit, submitText, onImageUpload, pageId } = props;
 
   return (
     <Form
@@ -40,6 +43,8 @@ const BlockForm: React.FunctionComponent<InjectedFormProps & IProps> = props => 
         editorSize="large"
         variant="outlined"
         error={typeof error === 'object' && error.name}
+        onImageUpload={onImageUpload}
+        pageId={pageId}
       />
       <Field
         name="name"
@@ -59,14 +64,18 @@ const BlockForm: React.FunctionComponent<InjectedFormProps & IProps> = props => 
         fullWidth
         variant="outlined"
       />
-      <Field
-        name="styles"
-        component={Input}
-        placeholder=".page { display: block; } .article { display: inline-block; font-size: 16px; }"
-        fullWidth
-        customLabel="Стили на странице"
-        variant="outlined"
-        multiline
+      <FieldArray
+        name="attachments"
+        component={() => (
+          <Field
+            name="title"
+            component={Input}
+            customLabel="Заголовок"
+            placeholder="Главная"
+            fullWidth
+            variant="outlined"
+          />
+        )}
       />
     </Form>
   );

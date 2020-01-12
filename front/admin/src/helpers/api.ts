@@ -6,6 +6,7 @@ export interface IRequestConfig {
   params?: { [key: string]: string | string[] };
   body?: { [key: string]: any };
   useBase?: boolean;
+  shouldStringifyBody?: boolean;
 }
 
 export interface IResponse<T> {
@@ -24,13 +25,14 @@ class Api {
     params,
     body,
     useBase = true,
+    shouldStringifyBody = true,
   }: IRequestConfig): Promise<IResponse<T>> => {
-    const options = { method, body: body && JSON.stringify(body) };
+    const options = { method, body: body && shouldStringifyBody ? JSON.stringify(body) : (body as FormData) };
     const _url = useBase ? `${base}${url}` : url;
     let res: IResponse<T> | Response;
     try {
       res = await fetch(_url, options);
-      res = await res.json();
+      res = await (res as Response).json();
     } catch (e) {
       console.warn(e);
       res = {

@@ -6,11 +6,16 @@ import PagesList from '@pages/Page/components/PagesList';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Tooltip from '@components/Tooltip/Tooltip';
+import { routes } from '@constants/routes';
 
 interface IProps {}
 
 const Dashboard: React.FunctionComponent<IProps> = props => {
   const [showModal, setShowModal] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    document.title = routes.dashboard.title();
+  }, []);
 
   const openModal = () => {
     setShowModal(true);

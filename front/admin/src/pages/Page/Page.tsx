@@ -7,14 +7,23 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Tooltip from '@components/Tooltip/Tooltip';
 import PagesLayoutConstructor from './components/PagesLayoutConstructor';
+import { routes } from '@constants/routes';
+import { onePageSelector } from './redux/selectors';
+import { connect } from 'react-redux';
+import { IStore } from '@store/reducer';
+import { IPage } from './types';
 
 interface IProps {
-  activePage: number;
+  activePageId: number;
+  activePage?: IPage;
 }
 
 const Page: React.FunctionComponent<IProps> = props => {
-  const { activePage } = props;
+  const { activePageId, activePage } = props;
   const [showModal, setShowModal] = React.useState<boolean>(false);
+  React.useEffect(() => {
+    document.title = routes.page.title(activePage ? activePage.name : '');
+  }, [activePage]);
   const openModal = () => {
     setShowModal(true);
   };
@@ -38,13 +47,19 @@ const Page: React.FunctionComponent<IProps> = props => {
               </Tooltip>
             }
           >
-            <PagesList showCreateModal={showModal} onCreateModalClose={closeModal} activePage={activePage} />
+            <PagesList showCreateModal={showModal} onCreateModalClose={closeModal} activePage={activePageId} />
           </SideMenu>
         }
-        content={<PagesLayoutConstructor activePageId={activePage} />}
+        content={<PagesLayoutConstructor activePageId={activePageId} />}
       />
     </React.Fragment>
   );
 };
 
-export default Page;
+const mapStateToProps = (state: IStore, ownProps: IProps) => {
+  return {
+    activePage: onePageSelector(state, ownProps.activePageId),
+  };
+};
+
+export default connect(mapStateToProps, null)(Page);

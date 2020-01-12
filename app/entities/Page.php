@@ -28,7 +28,7 @@ class Page
      */
     protected $layout;
 
-    /** 
+    /**
      * @ORM\OneToMany(targetEntity="Block", mappedBy="parent", cascade={"remove"})
      */
     protected $blocks;
@@ -38,6 +38,11 @@ class Page
      * @ORM\OrderBy({"order_in_page"="DESC"})
      */
     protected $title;
+
+    /** 
+     * @ORM\OneToMany(targetEntity="Image", mappedBy="parent", cascade={"remove"})
+     */
+    protected $images;
 
     /** 
      * @ORM\Column(type="string", nullable=true)
@@ -134,6 +139,15 @@ class Page
 
     public function updateLayout()
     {
+        function replaceImages(&$layout) {
+            preg_match_all('/<img[^>]+>/i', $layout, $images);
+            foreach ($images[0] as $image) {
+                $secureImg = str_replace('src', 'data-src', $image);
+                $layout = str_replace($image, $secureImg, $layout);
+            }
+            return $layout;
+        }
+
         $blocks = $this->getBlocks();
         $layout = '';
         $blocks->map(function($item) use (&$layout) {
@@ -141,7 +155,7 @@ class Page
                 $layout = $layout . $item->getLayout();
             }
         });
-        $this->setLayout($layout);
+        $this->setLayout(replaceImages($layout));
     }
 }
 ?>

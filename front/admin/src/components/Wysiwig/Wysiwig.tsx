@@ -8,7 +8,10 @@ import classNames from 'classnames';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import { EditorState, ContentState, convertFromHTML } from 'draft-js';
-// import {EditorProps} from '@types/react-draft-wysiwyg'
+import api, { IResponse } from '@helpers/api';
+import { IPage } from '@pages/Page/types';
+
+export const uploadImageApiUrl = 'image';
 
 const toolbar = {
   options: ['inline', 'blockType', 'list', 'textAlign', 'image'],
@@ -19,13 +22,14 @@ const toolbar = {
     inDropdown: true,
     options: ['Normal', 'H1', 'H2', 'H3', 'H4'],
   },
-  image: { inDropdown: true, alt: { present: true, mandatory: true } },
 };
 
 interface Props {
   addWhitespaceOnTab?: boolean;
   onChange?: (value: string) => any;
   editorSize?: 'medium' | 'large';
+  onImageUpload?: (data: any) => any;
+  pageId?: IPage['id'];
   [key: string]: any;
 }
 
@@ -81,7 +85,7 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 function Wysiwig(props: Props & Partial<EditorProps>) {
-  const { editorSize = 'medium' } = props;
+  const { editorSize = 'medium', pageId } = props;
   const classes = useStyles();
   const [isFocused, setIsFocused] = React.useState(false);
   const [editorState, setEditorState] = React.useState<any>(undefined);
@@ -119,7 +123,33 @@ function Wysiwig(props: Props & Partial<EditorProps>) {
     setEditorState(state);
   };
 
-  // console.log(value);
+  const onImageCallback = React.useCallback((file: File) => {
+    return new Promise(async (resolve, reject) => {
+      const formData = new FormData();
+      formData.append('image', file);
+      if (pageId !== undefined) {
+        formData.append('page_id', pageId);
+      }
+      const res = await api.makeRequest<any>({
+        url: uploadImageApiUrl,
+        method: 'POST',
+        body: formData,
+        shouldStringifyBody: false,
+      });
+      if (!res.success) {
+        return reject();
+      }
+
+      if (props.onImageUpload) {
+        props.onImageUpload(res.data);
+      }
+      return resolve({
+        data: {
+          link: res.data.url,
+        },
+      });
+    });
+  }, []);
 
   return (
     <div
@@ -137,7 +167,18 @@ function Wysiwig(props: Props & Partial<EditorProps>) {
             })}
           />
           <WysiwigComponent.Editor
-            toolbar={{ ...toolbar, image: { ...toolbar.image } }}
+            locale="ru"
+            toolbar={{
+              ...toolbar,
+              image: {
+                uploadCallback: onImageCallback,
+                previewImage: true,
+                inDropdown: true,
+                alt: {
+                  present: true,
+                },
+              },
+            }}
             editorClassName={classNames({
               [classes.editor]: true,
               [classes.editorFocused]: isFocused,

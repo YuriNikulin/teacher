@@ -17,6 +17,12 @@ export interface IPageReducer {
   drafts: Record<string, ILayout | undefined>;
 }
 
+export interface IAttachment {
+  preview?: string;
+  linkText?: string;
+  linkUrl: string;
+}
+
 export interface IBlock {
   id: string;
   name?: string;
@@ -28,6 +34,7 @@ export interface IBlock {
   isNew?: boolean;
   isTouched?: boolean;
   isDeleted?: boolean;
+  attachments?: any;
 }
 
 export type ILayout = IBlock[];

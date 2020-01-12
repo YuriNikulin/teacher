@@ -13,13 +13,6 @@
 
     function __construct($api_version_base) {
       self::$router = new Router();
-      self::$router::addRoute(array(
-        "method" => "PUT",
-        "path" => "@$api_version_base/blocks",
-        "controller" => function($body, $params, $user) {
-          $this->handleCreateBlock($body, $user);
-        }
-      ));
     }
 
     public static function handleCreateBlock($body, $parent_id)

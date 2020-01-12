@@ -17,7 +17,7 @@ export const errorSelector = (state: IStore) => {
   return state[PAGE_FORM_NAME].error;
 };
 
-export const onePageSelector = (state: IStore, id: string) => {
+export const onePageSelector = (state: IStore, id: string | number) => {
   return state[PAGE_FORM_NAME].pages.find(page => page.id === id);
 };
 

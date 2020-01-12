@@ -41,7 +41,7 @@ function PagesLayoutConstructor(props: Props) {
 
   const [activePage, setActivePage] = React.useState<IPage | null>(null);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
-  const [showAddBlockModal, setShowAddBlockModal] = React.useState<boolean>(false);
+  const [showAddBlockModal, setShowAddBlockModal] = React.useState<boolean>(true);
 
   const getPage = async () => {
     setIsLoading(true);
@@ -118,15 +118,12 @@ function PagesLayoutConstructor(props: Props) {
   };
 
   const handleBlockChange = (values: IBlock) => {
-    // console.log(values);
     if (!currentLayout || !activePage) {
       return;
     }
     const changedIndex = currentLayout.findIndex(item => item.id === values.id);
     const newItem = { ...values };
     const initialItem = activePage.blocks && activePage.blocks.find(item => item.id === values.id);
-    console.log(newItem);
-    console.log(initialItem);
     if (isEqual(newItem, initialItem, ['name', 'layout', 'styles', 'title', 'is_hidden'])) {
       delete newItem.isTouched;
     } else if (!newItem.isNew) {
@@ -154,7 +151,6 @@ function PagesLayoutConstructor(props: Props) {
       return;
     }
     setIsLoading(true);
-    console.log('here');
     const res = await api.makeRequest<ILayout>({
       url: changePageLayoutApiUrl,
       method: 'POST',
@@ -170,6 +166,10 @@ function PagesLayoutConstructor(props: Props) {
       return;
     }
     setIsLoading(false);
+  };
+
+  const handleImageUpload = () => {
+    console.log('uzhe zdes');
   };
 
   const handleLayoutChange = (result: OnDragEndParams) => {
@@ -214,11 +214,17 @@ function PagesLayoutConstructor(props: Props) {
         onBlockChange={handleBlockChange}
         onBlockChangeCancel={handleBlockChangeCancel}
         onLayoutChange={handleLayoutChange}
-        // onBlockHide={handleBlockHide}
+        pageId={activePageId}
       />
       {showAddBlockModal && (
         <Dialog title="Добавить блок" open maxWidth="md" fullWidth showCloseIcon onClose={handleAddModalClose}>
-          <BlockForm onSubmit={handleAddBlock} submitText="Добавить" />
+          <BlockForm
+            pageId={activePageId}
+            onImage
+            onSubmit={handleAddBlock}
+            submitText="Добавить"
+            onImageUpload={handleImageUpload}
+          />
         </Dialog>
       )}
     </React.Fragment>
