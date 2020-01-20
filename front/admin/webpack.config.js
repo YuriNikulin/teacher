@@ -56,6 +56,7 @@ module.exports = env => {
       contentBase: './dist',
       historyApiFallback: true,
       openPage: 'teacher/admin',
+      host: '0.0.0.0',
       proxy: {
         '/api/**': {
           target: 'http://localhost/teacher',

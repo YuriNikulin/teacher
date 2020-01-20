@@ -22,7 +22,6 @@ const _Menu: React.FunctionComponent<any> = props => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
 
   const doOpen = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    // console.log(event.currentTarget);
     setAnchorEl(event.currentTarget);
   };
 

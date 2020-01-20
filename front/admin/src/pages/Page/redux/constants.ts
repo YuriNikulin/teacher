@@ -1,0 +1,53 @@
+export const GET_PAGES_LIST_REQUEST = '@@login/GET_PAGES_LIST_REQUEST';
+export type GET_PAGES_LIST_REQUEST_TYPE = typeof GET_PAGES_LIST_REQUEST;
+
+export const GET_PAGES_LIST_SUCCESS = '@@login/GET_PAGES_LIST_SUCCESS';
+export type GET_PAGES_LIST_SUCCESS_TYPE = typeof GET_PAGES_LIST_SUCCESS;
+
+export const GET_PAGES_LIST_FAILURE = '@@login/GET_PAGES_LIST_FAILURE';
+export type GET_PAGES_LIST_FAILURE_TYPE = typeof GET_PAGES_LIST_FAILURE;
+
+export const CREATE_PAGE_REQUEST = '@@login/CREATE_PAGE_REQUEST';
+export type CREATE_PAGE_REQUEST_TYPE = typeof CREATE_PAGE_REQUEST;
+
+export const CREATE_PAGE_SUCCESS = '@@login/CREATE_PAGE_SUCCESS';
+export type CREATE_PAGE_SUCCESS_TYPE = typeof CREATE_PAGE_SUCCESS;
+
+export const CREATE_PAGE_FAILURE = '@@login/CREATE_PAGE_FAILURE';
+export type CREATE_PAGE_FAILURE_TYPE = typeof CREATE_PAGE_FAILURE;
+
+export const DELETE_PAGE_REQUEST = '@@login/DELETE_PAGE_REQUEST';
+export type DELETE_PAGE_REQUEST_TYPE = typeof DELETE_PAGE_REQUEST;
+
+export const DELETE_PAGE_SUCCESS = '@@login/DELETE_PAGE_SUCCESS';
+export type DELETE_PAGE_SUCCESS_TYPE = typeof DELETE_PAGE_SUCCESS;
+
+export const DELETE_PAGE_FAILURE = '@@login/DELETE_PAGE_FAILURE';
+export type DELETE_PAGE_FAILURE_TYPE = typeof DELETE_PAGE_FAILURE;
+
+export const EDIT_PAGE_REQUEST = '@@login/EDIT_PAGE_REQUEST';
+export type EDIT_PAGE_REQUEST_TYPE = typeof EDIT_PAGE_REQUEST;
+
+export const EDIT_PAGE_SUCCESS = '@@login/EDIT_PAGE_SUCCESS';
+export type EDIT_PAGE_SUCCESS_TYPE = typeof EDIT_PAGE_SUCCESS;
+
+export const EDIT_PAGE_FAILURE = '@@login/EDIT_PAGE_FAILURE';
+export type EDIT_PAGE_FAILURE_TYPE = typeof EDIT_PAGE_FAILURE;
+
+export const GET_PAGE_REQUEST = '@@login/GET_PAGE_REQUEST';
+export type GET_PAGE_REQUEST_TYPE = typeof GET_PAGE_REQUEST;
+
+export const GET_PAGE_SUCCESS = '@@login/GET_PAGE_SUCCESS';
+export type GET_PAGE_SUCCESS_TYPE = typeof GET_PAGE_SUCCESS;
+
+export const GET_PAGE_FAILURE = '@@login/GET_PAGE_FAILURE';
+export type GET_PAGE_FAILURE_TYPE = typeof GET_PAGE_FAILURE;
+
+export const CHANGE_DRAFT = '@@login/CHANGE_DRAFT';
+export type CHANGE_DRAFT_TYPE = typeof CHANGE_DRAFT;
+
+export const DELETE_DRAFT = '@@login/DELETE_DRAFT';
+export type DELETE_DRAFT_TYPE = typeof DELETE_DRAFT;
+
+export const PAGE_FORM_NAME = 'page';
+export const BLOCK_FORM_NAME = 'block';

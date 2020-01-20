@@ -21,7 +21,7 @@ class Block
     protected $parent;
 
     /** 
-     * @ORM\Column(type="string") 
+     * @ORM\Column(type="text") 
      */
     protected $layout;
 
@@ -36,7 +36,7 @@ class Block
     protected $styles;
 
     /** 
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $name;
 
@@ -44,6 +44,16 @@ class Block
      * @ORM\Column(type="integer", nullable=true)
      */
     protected $order_in_page;
+
+    /** 
+     * @ORM\Column(type="boolean")
+     */
+    protected $is_hidden;
+
+    /** 
+     * @ORM\Column(type="array", nullable=true)
+     */
+    protected $attachments;
 
     public function getId()
     {
@@ -113,6 +123,26 @@ class Block
     public function setOrder($order_in_page)
     {
         $this->order_in_page = $order_in_page;
+    }
+
+    public function getIsHidden()
+    {
+        return $this->is_hidden;
+    }
+
+    public function setIsHidden($is_hidden)
+    {
+        $this->is_hidden = $is_hidden;
+    }
+
+    public function getAttachments()
+    {
+        return $this->attachments;
+    }
+
+    public function setAttachments($attachments)
+    {
+        $this->attachments = $attachments;
     }
 }
 ?>

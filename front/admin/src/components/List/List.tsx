@@ -12,6 +12,7 @@ import Tooltip from '@components/Tooltip/Tooltip';
 interface Button {
   component: React.ReactElement;
   description?: string;
+  onClick?: () => any;
 }
 
 interface Item {
@@ -19,6 +20,8 @@ interface Item {
   description?: string;
   buttons?: Button[];
   id?: string | number;
+  onClick?: () => any;
+  selected?: boolean;
 }
 
 interface Props {
@@ -36,15 +39,15 @@ function _List(props: Props) {
     <React.Fragment>
       <List>
         {items.map((item: Item, index) => {
-          const { id, title, description, buttons } = item;
+          const { id, title, description, buttons, onClick } = item;
           return (
-            <ListItem button dense key={id || index}>
+            <ListItem button dense key={id || index} onClick={onClick} selected={item.selected}>
               <ListItemText primary={title} secondary={description}></ListItemText>
               {buttons && (
                 <ListItemSecondaryAction key={index}>
                   {buttons.map((item: Button, index) => {
                     const _button = (
-                      <IconButton size="small" key={index}>
+                      <IconButton size="small" key={index} onClick={item.onClick ? item.onClick : undefined}>
                         {item.component}
                       </IconButton>
                     );

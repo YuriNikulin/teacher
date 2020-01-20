@@ -5,16 +5,14 @@ import { connect } from 'react-redux';
 import { IStore } from '@store/reducer';
 import { isLoggedSelector } from '@pages/Auth/redux/selectors';
 
-const _routes = getRoutes();
-
 interface IProps {
   isLogged: boolean;
 }
 
 function Router(props: IProps): JSX.Element {
-  const { isLogged } = props;
+  const _routes = getRoutes();
   const routeResult = useRoutes(_routes);
-  return routeResult || <span>not found</span>;
+  return routeResult ? routeResult() : <span>not found</span>;
 }
 
 const mapStateToProps = (state: IStore) => {

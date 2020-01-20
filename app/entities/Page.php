@@ -24,12 +24,12 @@ class Page
     protected $url;
 
     /** 
-     * @ORM\Column(type="string", nullable = true)
+     * @ORM\Column(type="text", nullable = true)
      */
     protected $layout;
 
-    /** 
-     * @ORM\OneToMany(targetEntity="Block", mappedBy="parent")
+    /**
+     * @ORM\OneToMany(targetEntity="Block", mappedBy="parent", cascade={"remove"})
      */
     protected $blocks;
 
@@ -40,12 +40,17 @@ class Page
     protected $title;
 
     /** 
+     * @ORM\OneToMany(targetEntity="Image", mappedBy="parent", cascade={"remove"})
+     */
+    protected $images;
+
+    /** 
      * @ORM\Column(type="string", nullable=true)
      */
     protected $styles;
 
     /** 
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="text")
      */
     protected $name;
 
@@ -130,6 +135,54 @@ class Page
                 $currentThisBlock->setOrder($index);
             }
         }
+    }
+
+    public function updateLayout()
+    {
+        function replaceImages(&$layout) {
+            preg_match_all('/<img[^>]+>/i', $layout, $images);
+            foreach ($images[0] as $image) {
+                $secureImg = str_replace('src', 'data-src', $image);
+                $layout = str_replace($image, $secureImg, $layout);
+            }
+            return $layout;
+        }
+
+        $blocks = $this->getBlocks();
+        $layout = '';
+        $blocks->map(function($item) use (&$layout) {
+            if (!$item->getIsHidden()) {
+                $fragment = '';
+                $attachments = $item->getAttachments();
+                $fragment = "<div class='block' data-block-id='" . $item->getId() . "'>";
+                
+                if ($item->getTitle()) {
+                    $fragment .= "<h2 class='block__title'>" . $item->getTitle() . "</h2>";
+                }
+
+                $fragment .= $item->getLayout();
+
+                if ($attachments) {
+                    $fragment .= "<div class='block-attachments'><h4 class='block-attachments__title'>Файлы:</h4>";
+                    foreach($attachments as $key=>$attachment) {
+                        $number = $key + 1;
+                        $fragment .= "<div class='block-attachments-item'><span class='block-attachments-item__title'>$number. </span>";
+                        $fragment .= "<a target='_blank' href='" . $attachment['url'] . "'>";
+                        if ($attachment['linkVariant'] === 'preview') {
+                            $fragment .= "<img src='" . $attachment['preview'] . "' />";
+                        } else {
+                            $fragment .= $attachment['text'];
+                        }
+                        $fragment .= "</a>";
+                        $fragment .= "</div>";
+                    }
+                    $fragment .= "</div>";
+                }
+                $fragment .= "</div>";
+                $layout = $layout . $fragment;
+            }
+        });
+        $this->setLayout(replaceImages($layout));
     }
 }
 ?>

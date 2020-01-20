@@ -1,12 +1,12 @@
-
 const base = process.env.ENV === 'development' ? '/api/v1/' : '/teacher/api/v1/';
 
 export interface IRequestConfig {
   url: string;
-  method?: 'GET' | 'POST' | 'PUT';
+  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   params?: { [key: string]: string | string[] };
-  body?: { [key:string]: any };
+  body?: { [key: string]: any };
   useBase?: boolean;
+  shouldStringifyBody?: boolean;
 }
 
 export interface IResponse<T> {
@@ -19,30 +19,41 @@ export interface IApiClient {
 }
 
 class Api {
-  public static makeRequest = async ({
+  public static makeRequest = async <T>({
     url,
     method = 'GET',
     params,
     body,
     useBase = true,
-    onError
-  }: any) => {
-    const options = { method, body: body && JSON.stringify(body) };
-    let _url = useBase ? `${base}${url}` : url;
-    let res: IResponse<any> | Response;
+    shouldStringifyBody = true,
+  }: IRequestConfig): Promise<IResponse<T>> => {
+    const options = { method, body: body && shouldStringifyBody ? JSON.stringify(body) : (body as FormData) };
+    const _url = useBase ? `${base}${url}` : url;
+    let res: IResponse<T> | Response;
     try {
       res = await fetch(_url, options);
-      res = await res.json();
-    } catch(e) {
+      res = await (res as Response).json();
+    } catch (e) {
       console.warn(e);
       res = {
         success: false,
-        data: e
-      }
+        data: e,
+      };
     }
 
-    return res;
-  }
+    return res as IResponse<T>;
+  };
 }
+
+export const uploadFile = async (formData: FormData) => {
+  const res = await Api.makeRequest<any>({
+    url: 'image',
+    method: 'POST',
+    body: formData,
+    shouldStringifyBody: false,
+  });
+
+  return res;
+};
 
 export default Api;
