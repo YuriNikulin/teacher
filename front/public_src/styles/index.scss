@@ -1,0 +1,68 @@
+@import 'reset.css';
+@import 'variables';
+@import 'typography';
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: $color_bg;
+  padding-left: $gutter_md;
+  padding-right: $gutter_md;
+}
+
+.lazy-img {
+  transition: .3s ease-in-out;
+  opacity: 0;
+  &--in {
+    opacity: 1;
+  }
+}
+
+.block {
+  width: $container_width;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: $gutter_lg 0;
+  min-height: 100px;
+  border-bottom: 1px solid $color_grey;
+
+  &__title {
+    margin-bottom: $gutter_md;
+  }
+
+  span {
+    background: none !important;
+  }
+
+  &-attachments {
+    padding-top: $gutter_md;
+    margin-top: $gutter_md;
+    font-size: .9rem;
+
+    &-item {
+      padding: $gutter_sm 0;
+      display: flex;
+      align-items: center;
+
+      img {
+        max-width: 80px;
+      }
+
+      &__title {
+        margin-right: $gutter_sm;
+      }
+
+      &:not(:last-child) {
+        border-bottom: 1px dashed $color_grey;
+      }
+    }
+
+    &__title {
+      margin-bottom: $gutter_md;
+    }
+  }    
+}

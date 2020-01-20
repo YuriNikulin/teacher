@@ -50,6 +50,11 @@ class Block
      */
     protected $is_hidden;
 
+    /** 
+     * @ORM\Column(type="array", nullable=true)
+     */
+    protected $attachments;
+
     public function getId()
     {
         return $this->id;
@@ -128,6 +133,16 @@ class Block
     public function setIsHidden($is_hidden)
     {
         $this->is_hidden = $is_hidden;
+    }
+
+    public function getAttachments()
+    {
+        return $this->attachments;
+    }
+
+    public function setAttachments($attachments)
+    {
+        $this->attachments = $attachments;
     }
 }
 ?>

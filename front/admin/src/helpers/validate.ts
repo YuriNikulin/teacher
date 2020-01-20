@@ -36,7 +36,6 @@ export const validate = <T>(config: IValidateConfig<T>) => {
         }
       }
     }
-
     return errors;
   };
 };

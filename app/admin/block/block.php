@@ -35,7 +35,8 @@
         "name" => 'setName',
         "title" => 'setTitle',
         "styles" => 'setStyles',
-        "is_hidden" => 'setIsHidden'
+        "is_hidden" => 'setIsHidden',
+        "attachments" => 'setAttachments'
       ));
 
       if ($page) {
@@ -62,7 +63,8 @@
         "title" => 'setTitle',
         "styles" => 'setStyles',
         "layout" => 'setLayout',
-        "is_hidden" => 'setIsHidden'
+        "is_hidden" => 'setIsHidden',
+        "attachments" => 'setAttachments'
       ));
       return $block;
     }

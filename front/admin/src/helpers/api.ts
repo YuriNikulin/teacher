@@ -45,4 +45,15 @@ class Api {
   };
 }
 
+export const uploadFile = async (formData: FormData) => {
+  const res = await Api.makeRequest<any>({
+    url: 'image',
+    method: 'POST',
+    body: formData,
+    shouldStringifyBody: false,
+  });
+
+  return res;
+};
+
 export default Api;

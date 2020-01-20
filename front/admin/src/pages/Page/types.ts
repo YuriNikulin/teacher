@@ -19,8 +19,9 @@ export interface IPageReducer {
 
 export interface IAttachment {
   preview?: string;
-  linkText?: string;
-  linkUrl: string;
+  text?: string;
+  url: string;
+  linkVariant: 'preview' | 'text';
 }
 
 export interface IBlock {

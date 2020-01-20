@@ -41,6 +41,9 @@ export const reorder = (list: Array<any>, start: number, end: number) => {
 };
 
 export const replaceImgWithLink = (layout: string) => {
+  if (!layout) {
+    return;
+  }
   const regexp = /<img.*src="(.+\/(.+)\..*?)".*\/>/;
 
   const replaced = layout.replace(

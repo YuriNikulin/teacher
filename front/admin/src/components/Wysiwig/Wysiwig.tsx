@@ -7,14 +7,12 @@ import { EditorProps } from 'react-draft-wysiwyg';
 import classNames from 'classnames';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
-import { EditorState, ContentState, convertFromHTML } from 'draft-js';
-import api, { IResponse } from '@helpers/api';
+import { EditorState, ContentState } from 'draft-js';
+import { uploadFile, IResponse } from '@helpers/api';
 import { IPage } from '@pages/Page/types';
 
-export const uploadImageApiUrl = 'image';
-
 const toolbar = {
-  options: ['inline', 'blockType', 'list', 'textAlign', 'image'],
+  options: ['inline', 'blockType', 'list', 'textAlign', 'image', 'embedded', 'link'],
   inline: { inDropdown: true },
   list: { inDropdown: true },
   textAlign: { inDropdown: true },
@@ -130,12 +128,9 @@ function Wysiwig(props: Props & Partial<EditorProps>) {
       if (pageId !== undefined) {
         formData.append('page_id', pageId);
       }
-      const res = await api.makeRequest<any>({
-        url: uploadImageApiUrl,
-        method: 'POST',
-        body: formData,
-        shouldStringifyBody: false,
-      });
+
+      const res: IResponse<any> = await uploadFile(formData);
+
       if (!res.success) {
         return reject();
       }

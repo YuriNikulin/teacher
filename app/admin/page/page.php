@@ -199,7 +199,8 @@
             "layout" => "getLayout",
             "title" => "getTitle",
             "styles" => "getStyles",
-            "is_hidden" => "getIsHidden"
+            "is_hidden" => "getIsHidden",
+            "attachments" => "getAttachments"
           )));
         });
 

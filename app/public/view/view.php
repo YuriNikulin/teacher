@@ -16,15 +16,19 @@
           "method" => "GET",
           "path" => $page['url'],
           "controller" => function($body, $params) use ($page) {
-            $this->handleView($page['layout']);
+            $this->handleView($page);
           }
         ));
       }
     }
 
-    private function handleView($layout)
+    private function handleView($page)
     {
-      echo $layout;
+      // echo $layout;
+    // print_r($page);
+      $title = $page['title'];
+      $pageStyles = $page['styles'];
+      include('template.php');
       return;
     }
   }

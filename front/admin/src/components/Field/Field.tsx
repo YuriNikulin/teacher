@@ -2,9 +2,10 @@ import React from 'react';
 import { Field, BaseFieldProps } from 'redux-form';
 import { Typography, makeStyles, Theme } from '@material-ui/core';
 import { EditorProps } from 'react-draft-wysiwyg';
+import { IProps as IFileUploadProps } from '@components/FileUploader/FileUploader';
 
-interface Props {
-  customLabel?: string;
+export interface Props {
+  customLabel?: string | React.ReactElement;
   error?: boolean | string;
   [key: string]: any;
 }
@@ -17,7 +18,12 @@ const useStyles = makeStyles((theme: Theme) => {
   };
 });
 
-function CustomField(props: (BaseFieldProps & Props) | (BaseFieldProps & EditorProps & Props)) {
+function CustomField(
+  props:
+    | (BaseFieldProps & Props)
+    | (BaseFieldProps & EditorProps & Props)
+    | (IFileUploadProps & Props & Pick<BaseFieldProps, 'name'>),
+) {
   const classes = useStyles();
   const { customLabel, ...rest } = props;
 

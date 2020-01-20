@@ -30,16 +30,17 @@ function _Form(props: Props) {
     <Form onSubmit={onSubmit}>
       <Grid container direction="column">
         {React.Children.map(children, (item, index) => {
-          return (
-            <div key={index} className={classes.item}>
-              {item}
-            </div>
-          );
+          return <FormItem key={index}>{item}</FormItem>;
         })}
         <div className={classes.submit}>{submit}</div>
       </Grid>
     </Form>
   );
+}
+
+export function FormItem(props: any) {
+  const classes = useStyles();
+  return <div className={classes.item}>{props.children}</div>;
 }
 
 export default _Form;

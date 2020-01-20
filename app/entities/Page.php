@@ -152,7 +152,34 @@ class Page
         $layout = '';
         $blocks->map(function($item) use (&$layout) {
             if (!$item->getIsHidden()) {
-                $layout = $layout . $item->getLayout();
+                $fragment = '';
+                $attachments = $item->getAttachments();
+                $fragment = "<div class='block' data-block-id='" . $item->getId() . "'>";
+                
+                if ($item->getTitle()) {
+                    $fragment .= "<h2 class='block__title'>" . $item->getTitle() . "</h2>";
+                }
+
+                $fragment .= $item->getLayout();
+
+                if ($attachments) {
+                    $fragment .= "<div class='block-attachments'><h4 class='block-attachments__title'>Файлы:</h4>";
+                    foreach($attachments as $key=>$attachment) {
+                        $number = $key + 1;
+                        $fragment .= "<div class='block-attachments-item'><span class='block-attachments-item__title'>$number. </span>";
+                        $fragment .= "<a target='_blank' href='" . $attachment['url'] . "'>";
+                        if ($attachment['linkVariant'] === 'preview') {
+                            $fragment .= "<img src='" . $attachment['preview'] . "' />";
+                        } else {
+                            $fragment .= $attachment['text'];
+                        }
+                        $fragment .= "</a>";
+                        $fragment .= "</div>";
+                    }
+                    $fragment .= "</div>";
+                }
+                $fragment .= "</div>";
+                $layout = $layout . $fragment;
             }
         });
         $this->setLayout(replaceImages($layout));

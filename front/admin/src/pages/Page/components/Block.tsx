@@ -176,7 +176,7 @@ function Block(props: IBlock & IProps) {
               [classes.blockBodyDeleted]: isDeleted,
             })}
           >
-            <div dangerouslySetInnerHTML={{ __html: layout }} />
+            <div dangerouslySetInnerHTML={{ __html: layout || '' }} />
           </div>
           <div
             className={classNames({
