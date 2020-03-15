@@ -20,7 +20,7 @@ interface Item {
   description?: string;
   buttons?: Button[];
   id?: string | number;
-  onClick?: () => any;
+  onClick?: (item?: any) => any;
   selected?: boolean;
 }
 

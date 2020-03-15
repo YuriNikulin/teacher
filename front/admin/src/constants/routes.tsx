@@ -10,15 +10,18 @@ interface Route {
   path: string;
   title: (param?: any) => string;
   render: (params: HookRouter.QueryParams) => JSX.Element;
-  getPath?: (params: any) => string;
+  getPath: (params?: any) => string;
 }
 
+type RoutesEnum = 'dashboard' | 'page' | 'users' | 'user' | 'menus' | 'menu' | 'settings';
+
 export const routes: {
-  [key: string]: Route;
+  [key in RoutesEnum]: Route;
 } = {
   dashboard: {
     path: `${basePath}`,
     title: () => 'Главная',
+    getPath: () => `${basePath}`,
     render: function _Dashboard(): any {
       return () => <Lazy component={() => import('@pages/Dashboard/Dashboard')} />;
     },
@@ -35,16 +38,44 @@ export const routes: {
   },
   users: {
     path: `${basePath}/users`,
-    title: (name: string) => `Конструктор | ${name}`,
-    render: function _Users(): JSX.Element {
-      return <div>users</div>;
+    title: () => `Пользователи`,
+    getPath: () => `${basePath}/users`,
+    render: function _Users(): any {
+      return () => <Lazy component={() => import('@pages/Users/Users')} />;
     },
   },
   user: {
-    path: `${basePath}/users/:id`,
-    title: (name: string) => `Конструктор | ${name}`,
-    render: function _User(id): JSX.Element {
-      return <div>{id}</div>;
+    path: `${basePath}/users/:login`,
+    title: (name: string) => name,
+    getPath: (login: string) => {
+      return `${basePath}/users/${login}`;
+    },
+    render: function _User(params: any): any {
+      return () => <Lazy props={{ activeUserLogin: params.login }} component={() => import('@pages/Users/Users')} />;
+    },
+  },
+  menus: {
+    path: `${basePath}/menu`,
+    title: () => 'Меню',
+    getPath: () => `${basePath}/menu`,
+    render: function Menu(): any {
+      return () => <Lazy component={() => import('@pages/Menu/Menu')} />;
+    },
+  },
+  menu: {
+    path: `${basePath}/menu/:id`,
+    title: () => 'Меню',
+    getPath: (id: string) => `${basePath}/menu/${id}`,
+    render: function Menu(params: any): any {
+      return () => <Lazy props={{ activeMenuId: params.id }} component={() => import('@pages/Menu/Menu')} />;
+    },
+  },
+  settings: {
+    path: `${basePath}/settings`,
+    title: () => 'Настройки',
+    getPath: (id: string) => `${basePath}/menu`,
+    render: function Menu(params: any): any {
+      return () => <Lazy component={() => import('@pages/Settings/Settings')} />;
     },
   },
 };

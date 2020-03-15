@@ -26,7 +26,7 @@ import {
 import { navigate } from 'hookrouter';
 import { routes } from '@constants/routes';
 
-const getPagesListApiUrl = 'page_list';
+export const getPagesListApiUrl = 'page_list';
 export const onePageActionApiUrl = 'page';
 export const changePageLayoutApiUrl = 'page_layout';
 

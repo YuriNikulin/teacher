@@ -1,9 +1,10 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = env => {
   return {
-    entry: './index.js',
+    entry: ['./index.js'],
     module: {
       rules: [
         {
@@ -16,8 +17,17 @@ module.exports = env => {
           ],
         },
         {
+          test: /\.ts?$/,
+          exclude: /node_modules/,
+          use: [
+            {
+              loader: 'ts-loader',
+            },
+          ],
+        },
+        {
           test: /\.scss$/,
-          use: ['style-loader', 'css-loader', 'sass-loader'],
+          use: ['style-loader', MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
         },
         {
           test: /\.(png|ico|jpg|jpeg|gif|svg|woff|woff2)$/i,
@@ -31,6 +41,10 @@ module.exports = env => {
       new HtmlWebpackPlugin({
         title: 'Output Management',
         template: path.resolve(__dirname, 'index.html'),
+      }),
+      new MiniCssExtractPlugin({
+        filename: '[name].css',
+        chunkFilename: '[id].css',
       }),
     ],
     devServer: {

@@ -154,7 +154,7 @@ class Page
             if (!$item->getIsHidden()) {
                 $fragment = '';
                 $attachments = $item->getAttachments();
-                $fragment = "<div class='block' data-block-id='" . $item->getId() . "'>";
+                $fragment = "<div class='block-wrapper container'><div class='block' data-block-id='" . $item->getId() . "'>";
                 
                 if ($item->getTitle()) {
                     $fragment .= "<h2 class='block__title'>" . $item->getTitle() . "</h2>";
@@ -178,7 +178,7 @@ class Page
                     }
                     $fragment .= "</div>";
                 }
-                $fragment .= "</div>";
+                $fragment .= "</div></div>";
                 $layout = $layout . $fragment;
             }
         });

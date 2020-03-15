@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import { Form, SubmitHandler } from 'redux-form';
 
 interface Props {
-  children: Array<React.ReactElement>;
+  children: Array<React.ReactElement | null>;
   submit: React.ReactElement;
   onSubmit: SubmitHandler;
 }

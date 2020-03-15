@@ -5,12 +5,11 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 body {
   background-color: $color_bg;
-  padding-left: $gutter_md;
-  padding-right: $gutter_md;
 }
 
 .lazy-img {
@@ -21,14 +20,24 @@ body {
   }
 }
 
-.block {
+.container {
   width: $container_width;
   max-width: 100%;
   margin-left: auto;
   margin-right: auto;
-  padding: $gutter_lg 0;
+  padding-left: $gutter_md;
+  padding-right: $gutter_md;
+}
+
+.block {
   min-height: 100px;
-  border-bottom: 1px solid $color_grey;
+  white-space: pre-wrap;
+
+  &-wrapper {
+    padding-top: $gutter_md;
+    padding-bottom: $gutter_md;
+    margin-bottom: $gutter_lg;
+  }
 
   &__title {
     margin-bottom: $gutter_md;
@@ -65,4 +74,80 @@ body {
       margin-bottom: $gutter_md;
     }
   }    
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, .9);
+
+  &-menu {
+    &, li, ul, a {
+      display: flex;
+    }
+
+    &__item {
+      list-style-type: none;
+      
+      &:hover {
+        a {
+          text-decoration: underline
+        }
+      }
+
+      a {
+        text-decoration: none;
+        text-transform: uppercase;
+        color: #000;
+        align-items: center;
+        padding: $gutter_sm $gutter_md;
+      }
+    }
+  }
+
+  &-holder {
+    margin-bottom: $gutter_lg;
+  }
+
+  &__logo {
+    height: 220px;
+    transition: .2s ease-in-out height;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-right: $gutter_md;
+
+    img {
+      max-height: 100%;
+    }
+  }
+
+  &--stuck {
+    background: #fff; 
+    box-shadow: 0px 3px 10px rgba(0,0,0,.1);
+
+    .header__logo {
+      height: 100px;
+    }
+
+    .header-menu {
+      &__item {
+        a {
+          &:hover {
+            text-decoration: none;
+            background: #eee;
+          }
+        }
+      }
+    }
+  }
+
+  &-content {
+    padding-left: 0;
+    padding-right: 0;
+    display: flex;
+    min-height: 50px;
+  }
 }

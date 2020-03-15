@@ -55,7 +55,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const renderAttachments = (props: WrappedFieldArrayProps<any> & { dispatch: any; pageId?: string }) => {
-  // console.log(props);
   const { dispatch, pageId } = props;
   const classes = useStyles();
   const deleteAttachment = (item: number) => {
@@ -190,7 +189,6 @@ const BlockForm: React.FunctionComponent<InjectedFormProps & IProps> = props => 
         fullWidth
         editorSize="large"
         variant="outlined"
-        error={typeof error === 'object' && error.name}
         onImageUpload={onImageUpload}
         pageId={pageId}
       />

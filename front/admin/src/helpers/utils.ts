@@ -52,3 +52,40 @@ export const replaceImgWithLink = (layout: string) => {
   );
   return replaced;
 };
+
+export const localStorageUtils = {
+  read: (key: string) => {
+    return localStorage.getItem(key);
+  },
+
+  write: (key: string, value: any) => {
+    localStorage.setItem(key, value);
+  },
+};
+
+export const debounce = (fn: Function, delay: number) => {
+  let timer: any = null;
+  const innerFunc = (...args: any[]) => {
+    const setTimer = () => {
+      timer = setTimeout(() => {
+        timer = null;
+        fn(...args);
+      }, delay);
+    };
+    if (!timer) {
+      setTimer();
+    } else {
+      clearTimeout(timer);
+      setTimer();
+    }
+  };
+
+  innerFunc.cancel = () => {
+    if (timer) {
+      clearTimeout(timer);
+      timer = null;
+    }
+  };
+
+  return innerFunc;
+};

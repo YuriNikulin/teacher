@@ -10,6 +10,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Button from '@components/Button/Button';
 import Fade from '@material-ui/core/Fade';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 
 interface Props {
   page: IPage;
@@ -38,6 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 function PageLayoutConstructorHeader(props: Props) {
   const classes = useStyles();
   const { page, onEdit, onDelete, onAdd, hasChanges, onChangesAccept, onChangesDecline } = props;
+  console.log(page);
 
   return (
     <Container maxWidth={false} className={classes.container}>
@@ -63,6 +65,13 @@ function PageLayoutConstructorHeader(props: Props) {
         <Fab className={classes.item} color="secondary" size="medium" onClick={onEdit}>
           <SettingsRoundedIcon />
         </Fab>
+      </Tooltip>
+      <Tooltip message="Перейти на страницу" anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}>
+        <a href={page.url} target="_blank">
+          <Fab className={classes.item} color="default" size="medium">
+            <VisibilityIcon />
+          </Fab>
+        </a>
       </Tooltip>
       <Tooltip message="Удалить страницу" anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}>
         <Fab className={classes.item} color="default" size="medium" onClick={onDelete}>

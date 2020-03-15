@@ -25,6 +25,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
     overflow: 'auto',
+    '& .title': {
+      marginBottom: theme.spacing(4),
+    },
   },
   contentWithSidemenu: {
     // paddingLeft: theme.spacing(3),

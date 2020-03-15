@@ -4,6 +4,7 @@
   use Doctrine\ORM\Query;
   use Response\CustomResponse;
   require_once(__DIR__.'/../../entities/Page.php');
+  require_once(__DIR__.'/../../entities/Settings.php');
 
   class PublicView
   {
@@ -22,12 +23,68 @@
       }
     }
 
+    private function getHeader($settings)
+    {
+      $settings = Settings::getEntity();
+      $header = '<header class="header"><div class="header-content container">';
+      $logo = $settings->getLogo();
+      $menus = CustomEntityManager::$entityManager
+        ->getRepository("Menu")
+        ->findBy(array(), array('menu_order' => 'ASC'));
+      if (!$logo && !$menus) {
+        return '';
+      }
+
+      if ($logo) {
+        $header = $header . "<div class='header__logo'><img src='$logo' /></div>";
+      }
+
+      
+      if ($menus) {
+        $header = $header . '<nav class="header-menu"><ul>';
+        foreach($menus as $item) {
+          $url = $item->getUrl();
+          $title = $item->getTitle();
+          $header = $header . "<li class='header-menu__item'><a href='$url'>$title</a></li>";
+        };
+        $header = $header . '</ul></nav>';
+      }
+
+      $header = $header . '</div></header>';
+      return $header;
+    }
+
+    private function getSettingsStyles($styles, $settings)
+    {
+      $siteBackground = $settings->getSiteBackground();
+      $siteBackgroundImage = $settings->getSiteBackgroundImage();
+      $contentBackground = $settings->getContentBackground();
+      if (!$siteBackground && !$siteBackgroundImage && !$contentBackground) {
+        return $styles;
+      }
+
+      $styles = $styles . '';
+      if ($siteBackgroundImage) {
+        $styles = $styles . "body {  background: url('$siteBackgroundImage'); }";
+      } 
+      if ($siteBackground) {
+        $styles = $styles . "body { $siteBackground; }";
+      }
+
+      if ($contentBackground) {
+        $styles = $styles . ".block-wrapper { background: $contentBackground }";
+      }
+      return $styles;
+    }
+
     private function handleView($page)
     {
-      // echo $layout;
-    // print_r($page);
       $title = $page['title'];
-      $pageStyles = $page['styles'];
+      $styles = $page['styles'];
+      $settings = Settings::getEntity();
+      $styles = $this->getSettingsStyles($styles, $settings);
+      $header = $this->getHeader($settings);
+      $favicon = $settings->getFavicon();
       include('template.php');
       return;
     }

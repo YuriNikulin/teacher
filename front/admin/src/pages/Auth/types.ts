@@ -7,4 +7,7 @@ export interface IAuthReducer {
 export interface IUser {
   login: string;
   is_admin: boolean;
+  currentPassword?: string;
+  newPassword?: string;
+  password?: string;
 }

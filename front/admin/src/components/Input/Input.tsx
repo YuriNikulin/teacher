@@ -2,8 +2,9 @@ import React from 'react';
 import { WrappedFieldProps } from 'redux-form';
 import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 
-const Input: React.FunctionComponent<WrappedFieldProps &
-  TextFieldProps & { onFileDrop?: any; onDelete?: any }> = props => {
+const Input: React.FunctionComponent<
+  (WrappedFieldProps & TextFieldProps & { onFileDrop?: any; onDelete?: any }) | any
+> = props => {
   const { input, meta, error, onFileDrop, onDelete, ...rest } = props;
 
   return (
