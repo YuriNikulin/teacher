@@ -22,7 +22,8 @@ function CustomField(
   props:
     | (BaseFieldProps & Props)
     | (BaseFieldProps & EditorProps & Props)
-    | (IFileUploadProps & Props & Pick<BaseFieldProps, 'name'>),
+    | (IFileUploadProps & Props & Pick<BaseFieldProps, 'name'>)
+    | any,
 ) {
   const classes = useStyles();
   const { customLabel, ...rest } = props;

@@ -5,13 +5,21 @@ import login from '@pages/Login/redux/reducer';
 import { IAuthReducer } from '@pages/Auth/types';
 import auth from '@pages/Auth/redux/reducer';
 import page from '@pages/Page/redux/reducer';
+import user from '@pages/Users/redux/reducer';
+import menu from '@pages/Menu/redux/reducer';
+import settings from '@pages/Settings/redux/reducer';
 import { IPageReducer } from '@pages/Page/types';
-
+import { IUsersReducer } from '@pages/Users/types';
+import { IMenuReducer } from '@pages/Menu/types';
+import { ISettingsReducer } from '@pages/Settings/types';
 export interface IStore {
   form: FormReducer;
   login: ILoginReducer;
   auth: IAuthReducer;
   page: IPageReducer;
+  user: IUsersReducer;
+  menu: IMenuReducer;
+  settings: ISettingsReducer;
 }
 
 const initialState = {};
@@ -29,4 +37,7 @@ export default combineReducers({
   login,
   auth,
   page,
+  user,
+  menu,
+  settings,
 });

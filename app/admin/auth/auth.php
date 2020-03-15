@@ -26,8 +26,8 @@
       self::$router::addRoute(array(
         "method" => "POST",
         "path" => "@$api_version_base/register",
-        "controller" => function($body) {
-          $this->handleRegister($body);
+        "controller" => function($body, $params, $user) {
+          $this->handleRegister($body, $user);
         }
       ));
 
@@ -40,7 +40,7 @@
       ));
     }
 
-    private function handleLogin($body) {
+    public function handleLogin($body) {
       $errors = array();
       $login = isset($body['login']) ? $body['login'] : null;
       $password = isset($body['password']) ? base64_decode($body['password']) : null;
@@ -88,7 +88,12 @@
       return;
     }
 
-    private function handleRegister($body) {
+    private function handleRegister($body, $user) {
+      $_user = CustomEntityManager::$entityManager->find('User', $user['login']);
+      if (!$_user || !$_user->getIsAdmin()) {
+        CustomResponse::ajaxError(403, 'Недостаточно прав для выполнения операции');
+        return;
+      }
       $errors = array();
 
       $login = isset($body['login']) ? $body['login'] : null;
@@ -150,5 +155,5 @@
     }
   }
 
-  new Auth($api_version_base, $auth_expiration_time);
+  $__auth = new Auth($api_version_base, $auth_expiration_time);
 ?>

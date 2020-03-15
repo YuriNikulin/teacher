@@ -45,12 +45,15 @@ const useStyles = makeStyles((theme: Theme) => {
       fontFamily: theme.typography.fontFamily,
       maxWidth: '100%',
       overflow: 'hidden',
+      overflowY: 'scroll',
     },
     'editor--large': {
       minHeight: 250,
+      maxHeight: 350,
     },
     'editor--medium': {
       minHeight: 200,
+      maxHeight: 300,
     },
     editorFocused: {},
     border: {

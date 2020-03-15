@@ -1,5 +1,5 @@
 import React from 'react';
-import Drawer from '@material-ui/core/Drawer';
+import { localStorageUtils, debounce } from '@helpers/utils';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { ResizableBox } from 'react-resizable';
 import Typography from '@material-ui/core/Typography';
@@ -74,11 +74,32 @@ const useStyles = makeStyles((theme: Theme) => ({
 const SideMenu: React.FunctionComponent<IProps> = props => {
   const classes = useStyles();
   const { title } = props;
+
+  const [width, setWidth] = React.useState(250);
+
+  const handleResize = React.useCallback((e: any, data: any) => {
+    localStorageUtils.write('sideMenuWidth', data.size.width);
+  }, []);
+
+  const debouncedHandleResize = React.useCallback(debounce(handleResize, 3000), []);
+
+  React.useEffect(() => {
+    const _width = localStorageUtils.read('sideMenuWidth');
+    if (_width) {
+      setWidth(Number(_width));
+    }
+
+    return () => {
+      debouncedHandleResize.cancel();
+    };
+  }, []);
+
   return (
     <div className={classes.sideMenu}>
       <ResizableBox
         className="box"
-        width={250}
+        width={width}
+        onResize={debouncedHandleResize}
         height={200}
         axis="x"
         handle={

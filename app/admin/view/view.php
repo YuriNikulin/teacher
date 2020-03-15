@@ -10,7 +10,7 @@
       self::$router = new Router();
       self::$router::addRoute(array(
         "method" => "GET",
-        "path" => "/admin[*]?",
+        "path" => "/teacher/admin[*]?",
         "controller" => function() {
           $this->handleIndex();
         }

@@ -1,5 +1,6 @@
 <?php
   $base_path = "/teacher";
+  $public_url = "http://localhost";
   $db_conn = array(
     "isDevMode" => true,
     'proxyDir' => null,
@@ -7,11 +8,11 @@
     'useSimpleAnnotationReader' => false,
     'conn' => array(
       'driver' => 'pdo_pgsql',
-      'dbname' => 'teacher',
+      'dbname' => 'dbname',
       'host' => '127.0.0.1',
       'port' => '5432',
-      'user' => 'postgres',
-      'password' => 'db_password'
+      'user' => 'user',
+      'password' => 'password'
     ),
   );
   $secret = 'secret';
